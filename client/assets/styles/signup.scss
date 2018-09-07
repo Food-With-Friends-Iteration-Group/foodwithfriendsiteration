@@ -1,0 +1,16 @@
+.sign-up-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .flex-form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width:250px;
+    .split-form {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
