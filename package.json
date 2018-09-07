@@ -1,0 +1,23 @@
+{
+  "name": "food_with_friends",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RonAddy/Food_With_Friends.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RonAddy/Food_With_Friends/issues"
+  },
+  "homepage": "https://github.com/RonAddy/Food_With_Friends#readme",
+  "dependencies": {
+    "morgan": "^1.9.0"
+  }
+}
