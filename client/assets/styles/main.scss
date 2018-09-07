@@ -1,0 +1,32 @@
+// Navigation
+.main-navigation {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+// Buttons
+.button {
+	max-width: 100px;
+	padding: 10px 50px;
+	color: black;
+  margin: 10px auto;
+  border-radius: 5px;
+	font-size: 1em;
+	a {
+		text-decoration: none;
+		color: black;
+	}
+}
+
+// Miscellaneous
+
+// Colors
+.bg-green {
+	background-color: $green
+}
+
+.bg-blue {
+	background-color: $blue;
+}

@@ -1,0 +1,23 @@
+.main-login-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	.login-box {
+    max-width: 200px;
+		width: 15%;
+		height: auto;
+    text-align: center;
+    border: 2px solid black;
+    padding: 40px 80px;
+    border-radius: 5px;
+    .flex-form {
+      display: flex;
+      flex-direction: column;
+      .form-button {
+        max-width: none;
+        width: 100%;
+      }
+    }
+	}
+}
