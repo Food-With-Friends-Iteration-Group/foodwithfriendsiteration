@@ -1,26 +1,30 @@
 const http = require('http');
 
-http.createServer((request, response) => {
-  const { headers, method, url } = request;
-  let body = [];
-  request.on('error', (err) => {
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+
+  req.on('error', (err) => {
     console.error(err);
-  }).on('data', (chunk) => {
-    body.push(chunk);
-  }).on('end', () => {
-    body = Buffer.concat(body).toString();
-
-    response.on('error', (err) => {
-      console.error(err);
-    });
-
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
-
-    const responseBody = { headers, method, url, body };
-
-    response.write(JSON.stringify(responseBody));
-    response.end();
-
+    res.statusCode = 400;
+    res.end();
   });
-}).listen(3000);
+  res.on('error', (err) => {
+    console.error(err);
+  });
+
+  if (req.method === 'GET' && req.url === '/login') {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Welcome to Food With Friends\nPlease Log In');
+  } else {
+    res.statusCode = 404;
+    res.end();
+  }
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+
