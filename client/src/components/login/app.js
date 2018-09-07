@@ -8,12 +8,12 @@ class App extends Component {
     return (
       <div className="main-login-container">
         <div className="login-box">
-          <form className="flex-form" method='POST' action='/send-to-post-route-for-db'>
+          <form className="flex-form" method='POST' action='/sign-up'>
             <input name="username" type="text" placeholder="username" />
             <input name="password" type="password" />
             <button className="button form-button bg-green" type='submit' value='Log in'>Log In</button>
           </form>
-          <div className="button bg-blue"><a href='/send-to-sign-up-page'>Sign Up</a></div>
+          <a href='/send-to-sign-up-page'><div className="button bg-blue">Sign Up</div></a>
         </div>
       </div>
     )

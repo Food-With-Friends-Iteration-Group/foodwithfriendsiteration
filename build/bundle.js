@@ -202,7 +202,7 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/send-to-post-route-for-db' }, _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'username' }), _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement('a', { href: '/send-to-sign-up-page' }, 'Sign Up'))));
+      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/sign-up' }, _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'username' }), _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('a', { href: '/send-to-sign-up-page' }, _react2.default.createElement('div', { className: 'button bg-blue' }, 'Sign Up'))));
     }
   }]);
 
