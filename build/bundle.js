@@ -220,7 +220,7 @@ var FindFriends = function (_Component) {
   _createClass(FindFriends, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', null, 'Find Friends');
+      return _react2.default.createElement('div', { className: 'find-friends-container' }, _react2.default.createElement('h1', null, 'Find Friends'));
     }
   }]);
 
