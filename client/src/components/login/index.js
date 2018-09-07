@@ -7,5 +7,5 @@ import styles from '../../../assets/styles/app.scss';
 
 render(
   <Provider><App /></Provider>,
-  document.getElementById('main-app')
+  document.getElementById('login-sign-up')
 )

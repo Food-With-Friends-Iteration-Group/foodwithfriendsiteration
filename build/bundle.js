@@ -202,7 +202,7 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'render',
     value: function render() {
-      _react2.default.createElement('div', null, 'here');
+      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/send-to-post-route-for-db' }, _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'username' }), _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement('a', { href: '/send-to-sign-up-page' }, 'Sign Up'))));
     }
   }]);
 
@@ -256,7 +256,7 @@ function _interopRequireDefault(obj) {
 }
 
 // import store from './components/store';
-(0, _reactDom.render)(_react2.default.createElement(_reactRedux.Provider, null, _react2.default.createElement(_app2.default, null)), document.getElementById('main-app'));
+(0, _reactDom.render)(_react2.default.createElement(_reactRedux.Provider, null, _react2.default.createElement(_app2.default, null)), document.getElementById('login-sign-up'));
 
 /***/ }),
 
@@ -284,7 +284,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n", ""]);
+exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    border: 2px solid black;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n", ""]);
 
 // exports
 
