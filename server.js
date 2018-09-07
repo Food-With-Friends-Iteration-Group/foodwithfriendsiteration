@@ -1,4 +1,6 @@
 const http = require('http');
+var fs = require('fs');
+var path = require('path');
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -13,6 +15,11 @@ const server = http.createServer((req, res) => {
   res.on('error', (err) => {
     console.error(err);
   });
+
+  var filePath = '.' + request.url;
+    if (filePath == './') {
+        filePath = './index.html';
+    }
 
   if (req.method === 'GET' && req.url === '/login') {
     res.statusCode = 200;
