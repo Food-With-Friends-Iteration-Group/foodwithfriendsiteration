@@ -5,9 +5,9 @@ module.exports = {
   mode: 'development',
   devtool: 'incline-source-map',
   devServer: {
-    contentBase: path.join(__dirname, 'assets/'),
+    contentBase: path.join(__dirname, '/'),
     port: 3001,
-    hotOnly: true,
+    // hotOnly: true,
     publicPath: '/build',
     proxy: {
       '/api/*': {
