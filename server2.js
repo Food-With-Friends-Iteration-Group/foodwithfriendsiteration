@@ -33,6 +33,7 @@ const server = http.createServer((req, res) => {
  var contentType = mimeTypes[extname] || 'application/octet-stream';
 
 fs.readFile(filePath, function(error, content) {
+    console.log(filePath);
         if (error) {
             if(error.code == 'ENOENT') {
                 fs.readFile('./404.html', function(error, content) {
