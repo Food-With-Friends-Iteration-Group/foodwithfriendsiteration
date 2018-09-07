@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./client/src/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./client/src/components/login/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -116,15 +116,31 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./client/src/components/app.js":
-/*!**************************************!*\
-  !*** ./client/src/components/app.js ***!
-  \**************************************/
+/***/ "./client/src/components/login/app.js":
+/*!********************************************!*\
+  !*** ./client/src/components/login/app.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+}();
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
@@ -132,11 +148,11 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _store = __webpack_require__(/*! ./store */ "./client/src/components/store.js");
+var _store = __webpack_require__(/*! ../store */ "./client/src/components/store.js");
 
 var _store2 = _interopRequireDefault(_store);
 
-var _actions = __webpack_require__(/*! ./constants/actions */ "./client/src/components/constants/actions.js");
+var _actions = __webpack_require__(/*! ./constants/actions */ "./client/src/components/login/constants/actions.js");
 
 var types = _interopRequireWildcard(_actions);
 
@@ -156,17 +172,91 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+var App = function (_Component) {
+  _inherits(App, _Component);
+
+  function App() {
+    _classCallCheck(this, App);
+
+    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+  }
+
+  _createClass(App, [{
+    key: 'render',
+    value: function render() {
+      _react2.default.createElement('div', null, 'here');
+    }
+  }]);
+
+  return App;
+}(_react.Component);
+
+exports.default = App;
+
 /***/ }),
 
-/***/ "./client/src/components/constants/actions.js":
-/*!****************************************************!*\
-  !*** ./client/src/components/constants/actions.js ***!
-  \****************************************************/
+/***/ "./client/src/components/login/constants/actions.js":
+/*!**********************************************************!*\
+  !*** ./client/src/components/login/constants/actions.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+/***/ }),
+
+/***/ "./client/src/components/login/index.js":
+/*!**********************************************!*\
+  !*** ./client/src/components/login/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+
+var _app = __webpack_require__(/*! ./app */ "./client/src/components/login/app.js");
+
+var _app2 = _interopRequireDefault(_app);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _app3 = __webpack_require__(/*! ../../../assets/styles/app.scss */ "./client/assets/styles/app.scss");
+
+var _app4 = _interopRequireDefault(_app3);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+// import store from './components/store';
+(0, _reactDom.render)(_react2.default.createElement(_reactRedux.Provider, null, _react2.default.createElement(_app2.default, null)), document.getElementById('main-app'));
 
 /***/ }),
 
@@ -182,44 +272,6 @@ function _interopRequireDefault(obj) {
 
 /***/ }),
 
-/***/ "./client/src/index.js":
-/*!*****************************!*\
-  !*** ./client/src/index.js ***!
-  \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-
-var _app = __webpack_require__(/*! ./components/app */ "./client/src/components/app.js");
-
-var _app2 = _interopRequireDefault(_app);
-
-var _store = __webpack_require__(/*! ./components/store */ "./client/src/components/store.js");
-
-var _store2 = _interopRequireDefault(_store);
-
-var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-
-var _app3 = __webpack_require__(/*! ../assets/styles/app.scss */ "./client/assets/styles/app.scss");
-
-var _app4 = _interopRequireDefault(_app3);
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-(0, _reactDom.render)(_react2.default.createElement(_reactRedux.Provider, { store: _store2.default }, _react2.default.createElement(_app2.default, null)), document.getElementById('main-app'));
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./client/assets/styles/app.scss":
 /*!**********************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/sass-loader/lib/loader.js!./client/assets/styles/app.scss ***!
@@ -232,7 +284,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "body {\n  background-color: black; }\n", ""]);
+exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n", ""]);
 
 // exports
 
