@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src', 'index.js'),
+  entry: path.resolve(__dirname, './client/src/index.js'),
   mode: 'development',
   devtool: 'incline-source-map',
   devServer: {
