@@ -232,7 +232,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "body {\n  background-color: black; }\n", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
