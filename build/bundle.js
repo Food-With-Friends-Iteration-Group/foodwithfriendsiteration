@@ -232,6 +232,28 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
+var _store = __webpack_require__(/*! ./store */ "./client/src/components/store.js");
+
+var _store2 = _interopRequireDefault(_store);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _actions = __webpack_require__(/*! ./reducers/actions */ "./client/src/components/reducers/actions.js");
+
+var types = _interopRequireWildcard(_actions);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -254,26 +276,75 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
+var mapDispatchToProps = function mapDispatchToProps(store) {
+  return { friends: store.friends };
+};
+var mapStateToProps = function mapStateToProps(store) {
+  return { CurrentUser: store.friends };
+};
+
+// store.dispatch(types.currentUser(username, password));
+
 var App = function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    console.log("props", props.CurrentUser.pw);
+
+    _this.submitHandler = _this.submitHandler.bind(_this);
+    _this.changeHandler = _this.changeHandler.bind(_this);
+    return _this;
   }
 
   _createClass(App, [{
+    key: 'changeHandler',
+    value: function changeHandler(event) {
+      var value = event.target.value;
+      var name = event.target.name;
+
+      // set state
+      _store2.default.dispatch(types.currentUser(name, value));
+    }
+  }, {
+    key: 'submitHandler',
+    value: function submitHandler(event) {
+      event.preventDefault();
+      console.log("submitting");
+
+      if (!event.target.checkValidity()) {
+        // form is invalid
+        alert("Please complete the whole form.");
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/sign-up' }, 'Email: ', _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'email' }), 'Password: ', _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
+      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', onSubmit: this.submitHandler, noValidate: true }, _react2.default.createElement('label', null, 'Email:', _react2.default.createElement('input', {
+        name: 'user',
+        type: 'text',
+        value: 'email',
+        onChange: this.changeHandler,
+        placeholder: 'email',
+        required: true })), _react2.default.createElement('label', null, 'Password:', _react2.default.createElement('input', {
+        name: 'pw',
+        type: 'password',
+        value: 'password state',
+        onChange: this.changeHandler,
+        required: true })), _react2.default.createElement('button', {
+        className: 'button form-button bg-green',
+        type: 'submit',
+        value: 'submit' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
     }
   }]);
 
   return App;
 }(_react.Component);
 
-exports.default = App;
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ }),
 
@@ -364,14 +435,22 @@ exports.default = Header;
 
 
 var FindFriends = 'FindFriends';
+var CurrentUser = 'CurrentUser';
 
 var findFriends = function findFriends() {
   return { types: FindFriends };
 };
+var currentUser = function currentUser(username, password) {
+  return { types: CurrentUser,
+    user: username,
+    pw: password };
+};
 
 module.exports = {
   FindFriends: FindFriends,
-  findFriends: findFriends
+  findFriends: findFriends,
+  CurrentUser: CurrentUser,
+  currentUser: currentUser
 };
 
 /***/ }),
@@ -416,7 +495,9 @@ var initalState = {
   }, {
     user: 'Mike',
     cuisine: 'Italian'
-  }]
+  }],
+  pw: '',
+  user: ''
 };
 
 var findFriendsReducer = function findFriendsReducer() {
@@ -426,8 +507,12 @@ var findFriendsReducer = function findFriendsReducer() {
   switch (action.types) {
     case types.FindFriends:
       var newFindFriendState = Object.assign({}, state);
-
       return newFindFriendState;
+    case types.CurrentUser:
+      var newCurrentUserState = Object.assign({}, state);
+      newCurrentUserState.user = action.user;
+      newCurrentUserState.pw = action.pw;
+      return newCurrentUserState;
 
     default:
       return state;
