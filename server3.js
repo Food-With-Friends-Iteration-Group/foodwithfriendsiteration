@@ -1,19 +1,28 @@
 const express = require('express');
 const path = require('path');
-
+const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3000;
+const userController = require('./controllers/userController');
+const userCuisineController = require('./controllers/userCuisineController');
+const cuisineController = require('./controllers/cuisineController');
+
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/*', express.static(__dirname));
 
-app.post('/login', (req, res) => {
-  // send to db
+app.get('/login', cuisineController.getAll);
 
-  // set cookie
+app.get('/admin', userController.getAllUsers);
 
-  // set session
-  res.send("Logged In");
+app.post('/sign-up', userController.createUser);
+
+app.post('/login', userController.verifyUser, cuisineController.getID, userCuisineController.add, (req,res) => {
+  res.redirect('/dashboard');
 });
+
+app.get('/dashboard', userCuisineController.getAll)
 
 app.get('/sign-up', (req,res) => {
   res.sendFile(path.join(__dirname + '/views/sign-up.html'));
