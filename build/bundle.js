@@ -154,31 +154,19 @@ exports.default = App;
 
 /***/ }),
 
-/***/ "./client/src/components/findFriends/findFriends.component.js":
-/*!********************************************************************!*\
-  !*** ./client/src/components/findFriends/findFriends.component.js ***!
-  \********************************************************************/
+/***/ "./client/src/components/findFriends.component.js":
+/*!********************************************************!*\
+  !*** ./client/src/components/findFriends.component.js ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-  };
-}();
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
@@ -186,55 +174,39 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _store = __webpack_require__(/*! ./store */ "./client/src/components/store.js");
+
+var _store2 = _interopRequireDefault(_store);
+
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
+var mapStateToProps = function mapStateToProps(store) {
+  return {
+    findFriends: store.friends
+  };
+};
+
+var FindFriends = function FindFriends(props) {
+  console.log(props.findFriends.users);
+  var friendsArr = [];
+  for (var i = 0; i < props.findFriends.users.length; i++) {
+    console.log(props.findFriends.users[i]);
+    friendsArr.push(_react2.default.createElement('div', { className: 'friend-box', key: "friend" + i }, _react2.default.createElement('div', { className: 'inner-box' }, _react2.default.createElement('span', { className: 'friend-box__user' }, 'User:     '), props.findFriends.users[i].user), _react2.default.createElement('div', { className: 'inner-box' }, _react2.default.createElement('span', { className: 'friend-box__cuisine' }, ' Cuisine:     '), props.findFriends.users[i].cuisine)));
   }
-}
+  console.log(friendsArr);
+  return _react2.default.createElement('div', { className: 'find-friends-container' }, _react2.default.createElement('div', { className: 'main-header' }, 'Find Friends'), _react2.default.createElement('div', { className: 'find-friend-box' }, friendsArr));
+};
 
-function _possibleConstructorReturn(self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
-  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-}
-
-var FindFriends = function (_Component) {
-  _inherits(FindFriends, _Component);
-
-  function FindFriends() {
-    _classCallCheck(this, FindFriends);
-
-    return _possibleConstructorReturn(this, (FindFriends.__proto__ || Object.getPrototypeOf(FindFriends)).apply(this, arguments));
-  }
-
-  _createClass(FindFriends, [{
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement('div', { className: 'find-friends-container' }, _react2.default.createElement('h1', null, 'Find Friends'));
-    }
-  }]);
-
-  return FindFriends;
-}(_react.Component);
-
-exports.default = FindFriends;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(FindFriends);
 
 /***/ }),
 
-/***/ "./client/src/components/login/login.component.js":
-/*!********************************************************!*\
-  !*** ./client/src/components/login/login.component.js ***!
-  \********************************************************/
+/***/ "./client/src/components/login.component.js":
+/*!**************************************************!*\
+  !*** ./client/src/components/login.component.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -328,15 +300,15 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
-var _login = __webpack_require__(/*! ./login/login.component */ "./client/src/components/login/login.component.js");
+var _login = __webpack_require__(/*! ./login.component */ "./client/src/components/login.component.js");
 
 var _login2 = _interopRequireDefault(_login);
 
-var _signUp = __webpack_require__(/*! ./sign-up/sign-up.component */ "./client/src/components/sign-up/sign-up.component.js");
+var _signUp = __webpack_require__(/*! ./sign-up.component */ "./client/src/components/sign-up.component.js");
 
 var _signUp2 = _interopRequireDefault(_signUp);
 
-var _findFriends = __webpack_require__(/*! ./findFriends/findFriends.component */ "./client/src/components/findFriends/findFriends.component.js");
+var _findFriends = __webpack_require__(/*! ./findFriends.component */ "./client/src/components/findFriends.component.js");
 
 var _findFriends2 = _interopRequireDefault(_findFriends);
 
@@ -384,10 +356,127 @@ exports.default = Header;
 
 /***/ }),
 
-/***/ "./client/src/components/sign-up/sign-up.component.js":
-/*!************************************************************!*\
-  !*** ./client/src/components/sign-up/sign-up.component.js ***!
-  \************************************************************/
+/***/ "./client/src/components/reducers/actions.js":
+/*!***************************************************!*\
+  !*** ./client/src/components/reducers/actions.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var FindFriends = 'FindFriends';
+
+var findFriends = function findFriends() {
+  return { types: FindFriends };
+};
+
+module.exports = {
+  FindFriends: FindFriends,
+  findFriends: findFriends
+};
+
+/***/ }),
+
+/***/ "./client/src/components/reducers/foodWithFriendReducer.js":
+/*!*****************************************************************!*\
+  !*** ./client/src/components/reducers/foodWithFriendReducer.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _actions = __webpack_require__(/*! ./actions.js */ "./client/src/components/reducers/actions.js");
+
+var types = _interopRequireWildcard(_actions);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
+var initalState = {
+  users: [{
+    user: 'James',
+    cuisine: 'Indian'
+  }, {
+    user: 'Aaron',
+    cuisine: 'French'
+  }, {
+    user: 'Mike',
+    cuisine: 'Italian'
+  }]
+};
+
+var findFriendsReducer = function findFriendsReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initalState;
+  var action = arguments[1];
+
+  switch (action.types) {
+    case types.FindFriends:
+      var newFindFriendState = Object.assign({}, state);
+
+      return newFindFriendState;
+
+    default:
+      return state;
+  }
+};
+
+exports.default = findFriendsReducer;
+
+/***/ }),
+
+/***/ "./client/src/components/reducers/index.js":
+/*!*************************************************!*\
+  !*** ./client/src/components/reducers/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+
+var _foodWithFriendReducer = __webpack_require__(/*! ./foodWithFriendReducer */ "./client/src/components/reducers/foodWithFriendReducer.js");
+
+var _foodWithFriendReducer2 = _interopRequireDefault(_foodWithFriendReducer);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var reducers = (0, _redux.combineReducers)({
+  friends: _foodWithFriendReducer2.default
+});
+
+exports.default = reducers;
+
+/***/ }),
+
+/***/ "./client/src/components/sign-up.component.js":
+/*!****************************************************!*\
+  !*** ./client/src/components/sign-up.component.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -461,6 +550,36 @@ exports.default = SignUp;
 
 /***/ }),
 
+/***/ "./client/src/components/store.js":
+/*!****************************************!*\
+  !*** ./client/src/components/store.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+
+var _index = __webpack_require__(/*! ./reducers/index */ "./client/src/components/reducers/index.js");
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var store = (0, _redux.createStore)(_index2.default);
+
+exports.default = store;
+
+/***/ }),
+
 /***/ "./client/src/index.js":
 /*!*****************************!*\
   !*** ./client/src/index.js ***!
@@ -483,6 +602,12 @@ var _app = __webpack_require__(/*! ./components/app */ "./client/src/components/
 
 var _app2 = _interopRequireDefault(_app);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _store = __webpack_require__(/*! ./components/store */ "./client/src/components/store.js");
+
+var _store2 = _interopRequireDefault(_store);
+
 var _app3 = __webpack_require__(/*! ../assets/styles/app.scss */ "./client/assets/styles/app.scss");
 
 var _app4 = _interopRequireDefault(_app3);
@@ -491,7 +616,7 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-(0, _reactDom.render)(_react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement(_app2.default, null)), document.getElementById('login-sign-up'));
+(0, _reactDom.render)(_react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement(_reactRedux.Provider, { store: _store2.default }, _react2.default.createElement(_app2.default, null))), document.getElementById('login-sign-up'));
 
 /***/ }),
 
@@ -507,7 +632,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    border: 2px solid black;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n", ""]);
+exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    border: 2px solid black;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px 0;\n      border-top: 2px solid black;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-evenly;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n", ""]);
 
 // exports
 

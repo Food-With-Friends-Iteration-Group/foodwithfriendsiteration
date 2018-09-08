@@ -2,8 +2,14 @@
 .main-navigation {
 	width: 100%;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-evenly;
 	align-items: center;
+	padding: 5px 0;
+	border-top: 5px solid black;
+	border-bottom: 5px solid black;
+	a {
+		color: black;
+	}
 }
 
 // Headers
