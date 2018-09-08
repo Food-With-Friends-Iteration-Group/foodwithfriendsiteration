@@ -1,11 +1,12 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3000;
+
 const userController = require('./controllers/userController');
-const userCuisineController = require('./controllers/userCuisineController');
 const cuisineController = require('./controllers/cuisineController');
+const userCuisineController = require('./controllers/userCuisineController');
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
