@@ -234,12 +234,7 @@ socket.on('broadcast', function (msg) {
 });
 function sendMsg() {
   socket.emit('chat message', $('#m').val());
-  // let div = document.createElement('div');
-  // console.log(div)
-  // div.className = 'user1Class';
-  // div.innerHTML = 'user1';
   var val = $('#m').val();
-  console.log(val);
   $('#messages').append($('<li class="user1" id=' + val + '>'));
   $('#' + val).append($('<span>').text('User1'));
   $('#' + val).append($('<div>').text(val));
