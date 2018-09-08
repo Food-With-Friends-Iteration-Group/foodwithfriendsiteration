@@ -27,6 +27,7 @@
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "body-parser": "^1.18.3",
     "css-loader": "^1.0.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
