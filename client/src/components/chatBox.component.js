@@ -12,18 +12,16 @@ const mapStateToProps = store => ({
 const socket = socketIOClient(endpoint);
 
 socket.on('broadcast', function(msg) {
-  $('#messages').append($('<li class="user2"><span>User2</span>').text('User2: ' + msg));
+  $('#messages').append($('<li class="user2" id='+ msg +'>'));
+  $('#'+msg).append($('<div>').text(msg));
+  $('#'+msg).append($('<span>').text('User2'));
 })
 function sendMsg() {
   socket.emit('chat message', $('#m').val());
-  // let div = document.createElement('div');
-  // console.log(div)
-  // div.className = 'user1Class';
-  // div.innerHTML = 'user1';
   let val = $('#m').val();
-  console.log(val)
   $('#messages').append($('<li class="user1" id='+ val +'>'));
-  $('#'+val).append($('<div>').text('User1'));
+  $('#'+val).append($('<span>').text('User1'));
+  $('#'+val).append($('<div>').text(val));
   $('#m').val('');
   return false;
 };

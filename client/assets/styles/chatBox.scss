@@ -8,17 +8,21 @@
   .user1, .user2 {
     font-size: 1.4em;
     padding: 5px;
+    display: flex;
   }
   .user1 {
     text-align: left;
     span {
       color: $red;
+      padding-right: 10px;
     }
   }
   .user2 {
     text-align: right;
+    margin-left: auto;
     span {
       color: $blue;
+      padding-left: 10px;
     }
   }
 }
