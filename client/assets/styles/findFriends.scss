@@ -1,0 +1,28 @@
+.find-friends-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .find-friend-box {
+    height: 80%;
+    width: 30%;
+    border: 2px solid black;
+    .friend-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.5em;
+      padding: 10px;
+      border-bottom: 2px solid black;
+      .inner-box {
+        width: 35%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      &__user, &__cuisine {
+        color: black;
+      }
+    }
+  }
+}
