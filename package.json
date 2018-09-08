@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/RonAddy/Food_With_Friends#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
@@ -41,6 +42,8 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
     "sass-loader": "^7.1.0",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
     "style-loader": "^0.23.0",
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.0",

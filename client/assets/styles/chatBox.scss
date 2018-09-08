@@ -1,0 +1,19 @@
+.msg-box {
+  height: 85%;
+}
+.msg-box-form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  .msg-inbox {
+    height: 40px;
+    width: 85%;
+  }
+  .msg-btn {
+    width: 15%;
+    max-width: 200px;
+    padding: 10px 20px;
+  }
+}
