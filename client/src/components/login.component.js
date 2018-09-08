@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import store from './store';
 import {connect} from 'react-redux';
 import * as types from './reducers/actions';
+import {Route, Redirect} from 'react-redux';
 
 const mapDispatchToProps = (store) => ({friends: store.friends});
 const mapStateToProps = (store) => ({CurrentUser: store.friends});
@@ -11,10 +12,7 @@ const mapStateToProps = (store) => ({CurrentUser: store.friends});
 
 class App extends Component {
   constructor(props) {
-    super(props);
-
-    console.log("props", props.CurrentUser.pw);
-    
+    super(props);    
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
   }
@@ -24,7 +22,12 @@ class App extends Component {
     const name = event.target.name;
 
     // set state
-    store.dispatch(types.currentUser("user", "password");
+    if (name === 'user') {
+      store.dispatch(types.currentUser(value));
+    } else if (name === 'pw') {
+      store.dispatch(types.currentPW(value));
+    }
+    console.log("props", this.props);
   }
 
   submitHandler(event) {
@@ -34,9 +37,30 @@ class App extends Component {
     if (!event.target.checkValidity()) {
       // form is invalid
       alert("Please complete the whole form.")
+    } else {
+      const user = this.props.CurrentUser.user;
+      const pw = this.props.CurrentUser.pw;
+
+      console.log("USER AND PW", user, pw)
+
+    fetch('/login', {
+        method: 'POST',
+        body: JSON.stringify({email: user, password_digest: pw}),
+      }).then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return response.json();
+    }).then(function(data) {
+        console.log("Returned data: ", data);   
+        if(data){
+            alert(data);
+        }
+    }).catch(function(err) {
+        console.log("Returned error: ", err)
+    });
     }
   }
-
 
   render() {
     return (
@@ -48,8 +72,8 @@ class App extends Component {
               <input 
               name="user"
               type="text" 
-              value= "email" 
-              onChange={this.changeHandler} 
+              value={this.props.CurrentUser.user} 
+              onChange={this.changeHandler}
               placeholder="email" 
               required/>
             </label>
@@ -58,7 +82,7 @@ class App extends Component {
               <input 
               name="pw" 
               type="password"
-              value= "password state"
+              value= {this.props.CurrentUser.pw}
               onChange={this.changeHandler}
               required/>
             </label>

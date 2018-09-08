@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
-import store from './store';
+import React from 'react';
 
 const mapStateToProps = store => ({
   findFriends: store.friends

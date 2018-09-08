@@ -1,7 +1,5 @@
 const db = require('../dbConfig');
 
-console.log(db);
-
 module.exports = {
 
   findAllUsers: () => {

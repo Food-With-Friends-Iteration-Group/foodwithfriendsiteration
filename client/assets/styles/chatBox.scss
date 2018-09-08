@@ -1,0 +1,44 @@
+.msg-box {
+  height: 85%;
+  width: 50%;
+  margin: 100px auto;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  .user1, .user2 {
+    font-size: 1.4em;
+    padding: 5px;
+    display: flex;
+  }
+  .user1 {
+    text-align: left;
+    span {
+      color: $red;
+      padding-right: 10px;
+    }
+  }
+  .user2 {
+    text-align: right;
+    margin-left: auto;
+    span {
+      color: $blue;
+      padding-left: 10px;
+    }
+  }
+}
+.msg-box-form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  .msg-inbox {
+    height: 40px;
+    width: 85%;
+  }
+  .msg-btn {
+    width: 15%;
+    max-width: 200px;
+    padding: 10px 20px;
+  }
+}
