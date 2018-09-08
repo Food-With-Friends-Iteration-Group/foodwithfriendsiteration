@@ -12,13 +12,12 @@
       justify-content: space-between;
       align-items: center;
       font-size: 1.5em;
-      padding: 10px 0;
-      border-top: 2px solid black;
+      padding: 10px;
       border-bottom: 2px solid black;
       .inner-box {
         width: 35%;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-between;
         align-items: center;
       }
       &__user, &__cuisine {
