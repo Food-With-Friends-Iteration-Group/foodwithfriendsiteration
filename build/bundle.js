@@ -212,21 +212,32 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
+var endpoint = "http://localhost:3000";
+
 var mapStateToProps = function mapStateToProps(store) {
   return {
     findFriends: store.friends
   };
 };
+
 var socket = (0, _socket2.default)(endpoint);
 
+socket.on('broadcast', function (msg) {
+  $('#messages').append($('<li class="user2"><span>User2</span>').text('User2: ' + msg));
+});
 function sendMsg() {
-  console.log('hit button');
   socket.emit('chat message', $('#m').val());
+  // let div = document.createElement('div');
+  // console.log(div)
+  // div.className = 'user1Class';
+  // div.innerHTML = 'user1';
+  var val = $('#m').val();
+  console.log(val);
+  $('#messages').append($('<li class="user1" id=' + val + '>'));
+  $('#' + val).append($('<div>').text('User1'));
   $('#m').val('');
   return false;
 };
-
-var endpoint = "http://localhost:3000";
 
 var ChatBox = function (_Component) {
   _inherits(ChatBox, _Component);
@@ -234,13 +245,10 @@ var ChatBox = function (_Component) {
   function ChatBox() {
     _classCallCheck(this, ChatBox);
 
-    return _possibleConstructorReturn(this, (ChatBox.__proto__ || Object.getPrototypeOf(ChatBox)).call(this));
+    return _possibleConstructorReturn(this, (ChatBox.__proto__ || Object.getPrototypeOf(ChatBox)).apply(this, arguments));
   }
 
   _createClass(ChatBox, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {}
-  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement('div', null, _react2.default.createElement('ul', { className: 'msg-box', id: 'messages' }), _react2.default.createElement('form', { className: 'msg-box-form', action: '' }, _react2.default.createElement('input', { className: 'msg-inbox', id: 'm', autoComplete: 'off' }), _react2.default.createElement('button', { type: 'button', id: 'msg-btn-enter', onClick: sendMsg, className: 'button msg-btn bg-green' }, 'Send')));
@@ -362,7 +370,7 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/sign-up' }, 'Email: ', _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'email' }), 'Password: ', _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
+      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/login' }, 'Email: ', _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'email' }), 'Password: ', _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
     }
   }]);
 
@@ -3214,7 +3222,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    border: 2px solid black;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-between;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n\n.msg-box {\n  height: 85%; }\n\n.msg-box-form {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0 10px; }\n  .msg-box-form .msg-inbox {\n    height: 40px;\n    width: 85%; }\n  .msg-box-form .msg-btn {\n    width: 15%;\n    max-width: 200px;\n    padding: 10px 20px; }\n", ""]);
+exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    border: 2px solid black;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-between;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n\n.msg-box {\n  height: 85%;\n  width: 50%;\n  margin: 100px auto;\n  border: 2px solid black;\n  display: flex;\n  flex-direction: column; }\n  .msg-box .user1, .msg-box .user2 {\n    font-size: 1.4em;\n    padding: 5px; }\n  .msg-box .user1 {\n    text-align: left; }\n    .msg-box .user1 span {\n      color: #dc3545; }\n  .msg-box .user2 {\n    text-align: right; }\n    .msg-box .user2 span {\n      color: #007bff; }\n\n.msg-box-form {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0 10px; }\n  .msg-box-form .msg-inbox {\n    height: 40px;\n    width: 85%; }\n  .msg-box-form .msg-btn {\n    width: 15%;\n    max-width: 200px;\n    padding: 10px 20px; }\n", ""]);
 
 // exports
 

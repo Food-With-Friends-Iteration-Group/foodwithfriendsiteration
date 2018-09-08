@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div className="main-login-container">
         <div className="login-box">
-          <form className="flex-form" method='POST' action='/sign-up'>
+          <form className="flex-form" method='POST' action='/login'>
             Email: <input name="username" type="text" placeholder="email" />
             Password: <input name="password" type="password" />
             <button className="button form-button bg-green" type='submit' value='Log in'>Log In</button>
