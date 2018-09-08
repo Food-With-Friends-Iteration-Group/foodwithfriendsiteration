@@ -147,6 +147,11 @@ function _interopRequireDefault(obj) {
 }
 
 var App = function App() {
+
+  // fetch('/admin')
+  // .then( resp => resp.json())
+  // .then( resp => console.log(resp))
+
   return _react2.default.createElement('div', null, _react2.default.createElement(_nav2.default, null), _react2.default.createElement(_main2.default, null));
 };
 
