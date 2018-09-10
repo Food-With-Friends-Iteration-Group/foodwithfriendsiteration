@@ -1,14 +1,18 @@
 // REQUIRE ANY MODELS, ETC.
 
-const controllers = {};
+const userModel = require('../models/User');
+const userController = {};
+
 
 /**
 * getAllUsers
 *
 * @param next - Callback Function w signature (err, users)
 */
-controllers.getAllUsers = (next) => {
-  User.find({}, next);
+userController.getAllUsers = (req, res) => {
+  userModel.findAllUsers()
+  .then( data => res.json(data))
+  .catch( err => console.log(err))
 };
 
 /**
@@ -16,7 +20,7 @@ controllers.getAllUsers = (next) => {
  * 
  * 
  */
-controllers.getUserCuisine = () => {
+userController.getUserCuisine = () => {
   // query DB for user/cuisine table
 
   // handle ERROR
@@ -32,23 +36,14 @@ controllers.getUserCuisine = () => {
 * @param req - http.IncomingRequest
 * @param res - http.ServerResponse
 */
-controllers.createUser = (req, res, next) => {
-  if (typeof req.body.username === 'string' && typeof req.body.password === 'string') {
-    // create user object and send to DB.
-    User.create(req.body, (err, user) => {
-      if (err) {
-        // redirect to signup page
-        
-      } else {
-        // store in locals to pass to session controller
-        res.locals.user = user._id;
-        next();
-      }
-    });
-  } else {
-    // re-render signup
-    
-  }
+
+//TODO: setup error handling
+userController.createUser = (req, res, next) => {
+  userModel.createUser(req.body)
+  .then( data => res.json(data))
+  .catch( err => res.status(400).send('NOT VALID!'));
+  // if (typeof req.body.username === 'string' && typeof req.body.password === 'string') {
+  // }
 };
 
 /**
@@ -59,25 +54,30 @@ controllers.createUser = (req, res, next) => {
 * @param req - http.IncomingRequest
 * @param res - http.ServerResponse
 */
-controllers.verifyUser = (req, res, next) => {
+userController.verifyUser = (req, res, next) => {
+  const {email, password_digest} = req.body;
+  
+  console.log(email, password_digest);
 
-  const username = req.body.username;
-  const pw = req.body.password;
+  userModel.findByEmail(email)
+  .then( data => {
+    const userPassword = data.password_digest;
+    
+    const isValidLogin = userController.validateLogin(password_digest, userPassword);
 
-  // find user
-  // query DB
-    // handle errors -- on error, redirect to signup
-      return res.redirect('/sign-up');
+    res.locals.user_id = data.id
 
-    // TEST if PW is correct
+    return isValidLogin ? next() : res.status(400).json({msg: 'Incorrect login info'});
+  })
+  .catch( err => res.json({msg: err}));
 
-     // }else {
-      // Incorrect, redirect to signup
-      res.redirect('/sign-up');
 };
 
+userController.validateLogin = (loginAttempt, password_digest) =>{
+  return loginAttempt === password_digest ? true : false;
+}
 
-module.exports = controllers;
+module.exports = userController;
 
 
 /////////SESSION CONTROLLERS
