@@ -14,6 +14,7 @@ const userCuisineController = require('./controllers/userCuisineController');
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 app.get('/*', express.static(__dirname));
 

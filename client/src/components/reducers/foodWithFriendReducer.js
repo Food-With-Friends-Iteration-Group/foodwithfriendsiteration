@@ -17,18 +17,23 @@ const initalState = {
   ],
   pw: '',
   user: '',
+  cuisine: 'Italian',
+  isLoggedIn: true,
 }
 
 const findFriendsReducer = (state=initalState, action) => {
-  switch(action.types) {
+  switch(action.type) {
     case types.FindFriends:
       let newFindFriendState = Object.assign({}, state);
       return newFindFriendState;
     case types.CurrentUser:
       let newCurrentUserState = Object.assign({}, state);
       newCurrentUserState.user = action.user;
-      newCurrentUserState.pw = action.pw;
       return newCurrentUserState;
+    case types.CurrentPW:
+      let newCurrentPWState = Object.assign({}, state);
+      newCurrentPWState.pw = action.pw;
+      return newCurrentPWState; 
 
     default:
       return state;

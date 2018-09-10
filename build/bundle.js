@@ -339,6 +339,28 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
+var _store = __webpack_require__(/*! ./store */ "./client/src/components/store.js");
+
+var _store2 = _interopRequireDefault(_store);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _actions = __webpack_require__(/*! ./reducers/actions */ "./client/src/components/reducers/actions.js");
+
+var types = _interopRequireWildcard(_actions);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -361,26 +383,100 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
+var mapDispatchToProps = function mapDispatchToProps(store) {
+  return { friends: store.friends };
+};
+var mapStateToProps = function mapStateToProps(store) {
+  return { CurrentUser: store.friends };
+};
+
+// store.dispatch(types.currentUser(username, password));
+
 var App = function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    _this.submitHandler = _this.submitHandler.bind(_this);
+    _this.changeHandler = _this.changeHandler.bind(_this);
+    return _this;
   }
 
   _createClass(App, [{
+    key: 'changeHandler',
+    value: function changeHandler(event) {
+      var value = event.target.value;
+      var name = event.target.name;
+
+      // set state
+      if (name === 'user') {
+        _store2.default.dispatch(types.currentUser(value));
+      } else if (name === 'pw') {
+        _store2.default.dispatch(types.currentPW(value));
+      }
+      console.log("props", this.props);
+    }
+  }, {
+    key: 'submitHandler',
+    value: function submitHandler(event) {
+      event.preventDefault();
+      console.log("submitting");
+
+      if (!event.target.checkValidity()) {
+        // form is invalid
+        alert("Please complete the whole form.");
+      } else {
+        var user = this.props.CurrentUser.user;
+        var pw = this.props.CurrentUser.pw;
+        var cuisine = this.props.CurrentUser.cuisine;
+
+        fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
+        }).then(function (response) {
+          if (response.status >= 400) {
+            throw new Error("Bad response from server");
+          }
+          return response.json();
+        }).then(function (data) {
+          console.log("Returned data: ", data);
+          if (data) {
+            ;
+          }
+        }).catch(function (err) {
+          console.log("Returned error: ", err);
+        });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/login' }, 'Email: ', _react2.default.createElement('input', { name: 'username', type: 'text', placeholder: 'email' }), 'Password: ', _react2.default.createElement('input', { name: 'password', type: 'password' }), _react2.default.createElement('button', { className: 'button form-button bg-green', type: 'submit', value: 'Log in' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
+      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', onSubmit: this.submitHandler, noValidate: true }, _react2.default.createElement('label', null, 'Email:', _react2.default.createElement('input', {
+        name: 'user',
+        type: 'text',
+        value: this.props.CurrentUser.user,
+        onChange: this.changeHandler,
+        placeholder: 'email',
+        required: true })), _react2.default.createElement('label', null, 'Password:', _react2.default.createElement('input', {
+        name: 'pw',
+        type: 'password',
+        value: this.props.CurrentUser.pw,
+        onChange: this.changeHandler,
+        required: true })), _react2.default.createElement('label', null, 'Cuisine:', _react2.default.createElement('select', null, _react2.default.createElement('option', { value: 'Italian' }, 'Italian'), _react2.default.createElement('option', { value: 'French' }, 'French'))), _react2.default.createElement('button', {
+        className: 'button form-button bg-green',
+        type: 'submit',
+        value: 'submit' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
     }
   }]);
 
   return App;
 }(_react.Component);
 
-exports.default = App;
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ }),
 
@@ -475,14 +571,34 @@ exports.default = Header;
 
 
 var FindFriends = 'FindFriends';
+var CurrentUser = 'CurrentUser';
+var CurrentPW = 'CurrentPW';
 
 var findFriends = function findFriends() {
   return { types: FindFriends };
 };
 
+var currentPW = function currentPW(value) {
+  return {
+    type: CurrentPW,
+    pw: value
+  };
+};
+
+var currentUser = function currentUser(value) {
+  return {
+    type: CurrentUser,
+    user: value
+  };
+};
+
 module.exports = {
   FindFriends: FindFriends,
-  findFriends: findFriends
+  findFriends: findFriends,
+  CurrentUser: CurrentUser,
+  currentUser: currentUser,
+  currentPW: currentPW,
+  CurrentPW: CurrentPW
 };
 
 /***/ }),
@@ -527,18 +643,29 @@ var initalState = {
   }, {
     user: 'Mike',
     cuisine: 'Italian'
-  }]
+  }],
+  pw: '',
+  user: '',
+  cuisine: 'Italian',
+  isLoggedIn: true
 };
 
 var findFriendsReducer = function findFriendsReducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initalState;
   var action = arguments[1];
 
-  switch (action.types) {
+  switch (action.type) {
     case types.FindFriends:
       var newFindFriendState = Object.assign({}, state);
-
       return newFindFriendState;
+    case types.CurrentUser:
+      var newCurrentUserState = Object.assign({}, state);
+      newCurrentUserState.user = action.user;
+      return newCurrentUserState;
+    case types.CurrentPW:
+      var newCurrentPWState = Object.assign({}, state);
+      newCurrentPWState.pw = action.pw;
+      return newCurrentPWState;
 
     default:
       return state;
@@ -3225,7 +3352,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    border: 2px solid black;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-between;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n\n.msg-box {\n  height: 85%;\n  width: 50%;\n  margin: 100px auto;\n  border: 2px solid black;\n  display: flex;\n  flex-direction: column; }\n  .msg-box .user1, .msg-box .user2 {\n    font-size: 1.4em;\n    padding: 5px;\n    display: flex; }\n  .msg-box .user1 {\n    text-align: left; }\n    .msg-box .user1 span {\n      color: #dc3545;\n      padding-right: 10px; }\n  .msg-box .user2 {\n    text-align: right;\n    margin-left: auto; }\n    .msg-box .user2 span {\n      color: #007bff;\n      padding-left: 10px; }\n\n.msg-box-form {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0 10px; }\n  .msg-box-form .msg-inbox {\n    height: 40px;\n    width: 85%; }\n  .msg-box-form .msg-btn {\n    width: 15%;\n    max-width: 200px;\n    padding: 10px 20px; }\n", ""]);
+exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    box-shadow: 2px 2px;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-between;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n\n.msg-box {\n  height: 85%;\n  width: 50%;\n  margin: 100px auto;\n  border: 2px solid black;\n  display: flex;\n  flex-direction: column; }\n  .msg-box .user1, .msg-box .user2 {\n    font-size: 1.4em;\n    padding: 5px;\n    display: flex; }\n  .msg-box .user1 {\n    text-align: left; }\n    .msg-box .user1 span {\n      color: #dc3545;\n      padding-right: 10px; }\n  .msg-box .user2 {\n    text-align: right;\n    margin-left: auto; }\n    .msg-box .user2 span {\n      color: #007bff;\n      padding-left: 10px; }\n\n.msg-box-form {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0 10px; }\n  .msg-box-form .msg-inbox {\n    height: 40px;\n    width: 85%; }\n  .msg-box-form .msg-btn {\n    width: 15%;\n    max-width: 200px;\n    padding: 10px 20px; }\n", ""]);
 
 // exports
 

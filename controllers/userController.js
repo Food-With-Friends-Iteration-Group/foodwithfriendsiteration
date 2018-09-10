@@ -57,6 +57,8 @@ userController.createUser = (req, res, next) => {
 userController.verifyUser = (req, res, next) => {
   const {email, password_digest} = req.body;
   
+  console.log(email, password_digest);
+
   userModel.findByEmail(email)
   .then( data => {
     const userPassword = data.password_digest;

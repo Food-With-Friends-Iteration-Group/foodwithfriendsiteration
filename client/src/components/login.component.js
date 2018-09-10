@@ -40,12 +40,12 @@ class App extends Component {
     } else {
       const user = this.props.CurrentUser.user;
       const pw = this.props.CurrentUser.pw;
-
-      console.log("USER AND PW", user, pw)
+      const cuisine = this.props.CurrentUser.cuisine;
 
     fetch('/login', {
         method: 'POST',
-        body: JSON.stringify({email: user, password_digest: pw}),
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({email: user, password_digest: pw, type: cuisine}),
       }).then(function(response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server");
@@ -54,7 +54,7 @@ class App extends Component {
     }).then(function(data) {
         console.log("Returned data: ", data);   
         if(data){
-            alert(data);
+            ;
         }
     }).catch(function(err) {
         console.log("Returned error: ", err)
@@ -85,6 +85,13 @@ class App extends Component {
               value= {this.props.CurrentUser.pw}
               onChange={this.changeHandler}
               required/>
+            </label>
+            <label>
+            Cuisine:
+              <select>
+                <option value="Italian">Italian</option>
+                <option value="French">French</option>
+              </select>
             </label>
             <button 
             className="button form-button bg-green" 
