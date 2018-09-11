@@ -13,7 +13,7 @@ const userController = {
   },
   //first chect is the user exists if they do ask them to sign in instead
   checkForUser(req, res, next) {
-    User.findOne({ loginName: "name" }, (err, data) => {
+    User.findOne({ loginName: "name", password: "password" }, (err, data) => {
       if (data) {
         res.send(data);
       } else {

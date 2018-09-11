@@ -14,15 +14,13 @@ const cuisineController = require("./controllers/cuisineController");
 // //
 const mongoose = require("mongoose");
 
-mongoose.connect(
-  "mongodb://christine:passworddd@ds151382.mlab.com:51382/fwfiteration"
-);
-mongoose.connection.once("open", () => {
-  console.log("Connected to Database");
+
+mongoose.connect('mongodb://christine_c:shapeups3@ds151382.mlab.com:51382/fwfiteration');
+mongoose.connection.once('open', () => {
+  console.log('Connected to Database');
 });
 
-//
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 app.get("/*", express.static(__dirname));
