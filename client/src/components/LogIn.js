@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import store from '../store';
-import { connect } from 'react-redux';
-import * as types from './reducers/actions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import store from "../store";
+import { connect } from "react-redux";
+import * as types from "./reducers/actions";
+import { Redirect } from "react-router-dom";
 
 const mapDispatchToProps = store => ({ friends: store.friends });
 const mapStateToProps = store => ({ CurrentUser: store.friends });
 
 class LogIn extends Component {
   constructor(props) {
-    super(props);    
+    super(props);
     this.state = {
       redirect: false
-    }
+    };
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
   }
@@ -31,29 +31,29 @@ class LogIn extends Component {
   }
 
   submitHandler(event) {
-    event.preventDefault()
+    event.preventDefault();
     if (!event.target.checkValidity()) return;
- 
+
     const user = this.props.CurrentUser.user;
     const pw = this.props.CurrentUser.pw;
     const cuisine = this.props.CurrentUser.cuisine;
 
-    fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type' : 'application/json' },
-        body: JSON.stringify({ email: user, password_digest: pw, type: cuisine }),
-      }).then(response => {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server");
-        } else {
-          this.setState({ redirect: !this.state.redirect })
-        }
-    })
+    fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
+    }).then(response => {
+      if (response.status >= 400) {
+        throw new Error("Bad response from server");
+      } else {
+        this.setState({ redirect: !this.state.redirect });
+      }
+    });
   }
 
   render() {
     const { redirect } = this.state;
-    if (redirect) return <Redirect to='/chat' />
+    if (redirect) return <Redirect to="/chat" />;
     return (
       <div className="main-login-container">
         <div className="login-box">
@@ -70,13 +70,14 @@ class LogIn extends Component {
               />
             </label>
             <label>
-            Password: 
-              <input 
-              name="pw" 
-              type="password"
-              value={this.props.CurrentUser.pw}
-              onChange={this.changeHandler}
-              required/>
+              Password:
+              <input
+                name="pw"
+                type="password"
+                value={this.props.CurrentUser.pw}
+                onChange={this.changeHandler}
+                required
+              />
             </label>
             <label>
               Cuisine:
@@ -105,4 +106,4 @@ class LogIn extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-  )(LogIn);
+)(LogIn);

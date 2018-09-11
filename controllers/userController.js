@@ -3,13 +3,13 @@ const User = require("../models/UserSchemaModel");
 
 const userController = {
   getAll(req, res) {
-    User.find()
-      .then(data => {
-        res.json(data);
-      })
-      .catch(err => {
-        res.json(err);
-      });
+    User.find({}, (err, data) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(data);
+      }
+    });
   },
   //first chect is the user exists if they do ask them to sign in instead
   checkForUser(req, res, next) {
