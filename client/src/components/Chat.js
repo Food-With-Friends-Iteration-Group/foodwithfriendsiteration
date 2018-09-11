@@ -12,7 +12,7 @@ class Chat extends Component {
     this.state = {
       message: '',
       messages: []
-    };
+    }; 
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleOnClick = this.handleOnClick.bind(this);
   }
