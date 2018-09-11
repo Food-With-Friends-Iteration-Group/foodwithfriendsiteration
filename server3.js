@@ -11,8 +11,15 @@ const PORT = 3000;
 const userController = require('./controllers/userController');
 const cuisineController = require('./controllers/cuisineController');
 const userCuisineController = require('./controllers/userCuisineController');
+// //
+const mongoose = require('mongoose');
 
+mongoose.connect('mongodb://christine:passworddd@ds151382.mlab.com:51382/fwfiteration');
+mongoose.connection.once('open', () => {
+  console.log('Connected to Database');
+});
 
+//
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
