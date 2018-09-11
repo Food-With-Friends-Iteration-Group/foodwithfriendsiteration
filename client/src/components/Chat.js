@@ -16,7 +16,7 @@ class Chat extends Component {
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleOnClick = this.handleOnClick.bind(this);
   }
-  componentDidMount(){
+  componentDidMount(){ 
     subscribeToMessages(message => {
       this.setState({
         messages: [...this.state.messages, message]
