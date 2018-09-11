@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import * as types from './reducers/actions';
 import { Redirect } from 'react-router-dom';
 
-const mapDispatchToProps = (store) => ({friends: store.friends});
-const mapStateToProps = (store) => ({CurrentUser: store.friends});
+const mapDispatchToProps = store => ({ friends: store.friends });
+const mapStateToProps = store => ({ CurrentUser: store.friends });
 
 class LogIn extends Component {
   constructor(props) {
@@ -23,9 +23,9 @@ class LogIn extends Component {
     const name = event.target.name;
 
     // set state
-    if (name === 'user') {
+    if (name === "user") {
       store.dispatch(types.currentUser(value));
-    } else if (name === 'pw') {
+    } else if (name === "pw") {
       store.dispatch(types.currentPW(value));
     }
   }
@@ -57,16 +57,17 @@ class LogIn extends Component {
     return (
       <div className="main-login-container">
         <div className="login-box">
-          <form className="flex-form" onSubmit = {this.submitHandler} noValidate>
+          <form className="flex-form" onSubmit={this.submitHandler} noValidate>
             <label>
-            Email: 
-              <input 
-              name="user"
-              type="text" 
-              value={this.props.CurrentUser.user} 
-              onChange={this.changeHandler}
-              placeholder="email" 
-              required/>
+              Email:
+              <input
+                name="user"
+                type="text"
+                value={this.props.CurrentUser.user}
+                onChange={this.changeHandler}
+                placeholder="email"
+                required
+              />
             </label>
             <label>
             Password: 
@@ -78,25 +79,30 @@ class LogIn extends Component {
               required/>
             </label>
             <label>
-            Cuisine:
+              Cuisine:
               <select>
                 <option value="Italian">Italian</option>
                 <option value="French">French</option>
               </select>
             </label>
-            <button 
-            className="button form-button bg-green" 
-            type='submit' 
-            value='submit'>Log In</button>
+            <button
+              className="button form-button bg-green"
+              type="submit"
+              value="submit"
+            >
+              Log In
+            </button>
           </form>
-          <div className="button bg-blue"><Link to='/sign-up'>Sign Up</Link></div>
+          <div className="button bg-blue">
+            <Link to="/sign-up">Sign Up</Link>
+          </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default connect (
+export default connect(
   mapStateToProps,
   mapDispatchToProps
   )(LogIn);
