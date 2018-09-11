@@ -2,13 +2,11 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
 
-
-let endpoint = "http://localhost:3000";
+const endpoint = "http://localhost:3000";
 
 const mapStateToProps = store => ({
   findFriends: store.friends
 })
-
 const socket = socketIOClient(endpoint);
 
 socket.on('broadcast', function(msg) {
@@ -16,6 +14,7 @@ socket.on('broadcast', function(msg) {
   $('#'+msg).append($('<div>').text(msg));
   $('#'+msg).append($('<span>').text('User2'));
 })
+
 function sendMsg() {
   socket.emit('chat message', $('#m').val());
   let val = $('#m').val();
@@ -26,7 +25,14 @@ function sendMsg() {
   return false;
 };
 
-class ChatBox extends Component {
+class Chat extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+
+    }
+  }
+
   render() {
     return (
       <div>
@@ -40,4 +46,4 @@ class ChatBox extends Component {
 }
 
 
-export default connect(mapStateToProps)(ChatBox);
+export default connect(mapStateToProps)(Chat);
