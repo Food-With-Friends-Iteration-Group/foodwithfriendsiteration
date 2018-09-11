@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import store from "./store";
+import store from "../store";
 import { connect } from "react-redux";
 import * as types from "./reducers/actions";
-import { Route, Redirect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const mapDispatchToProps = store => ({ friends: store.friends });
 const mapStateToProps = store => ({ CurrentUser: store.friends });
 
-// store.dispatch(types.currentUser(username, password));
-
-class App extends Component {
+class LogIn extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      redirect: false
+    };
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
   }
@@ -27,48 +28,32 @@ class App extends Component {
     } else if (name === "pw") {
       store.dispatch(types.currentPW(value));
     }
-    console.log("props", this.props);
   }
 
   submitHandler(event) {
     event.preventDefault();
-    console.log("submitting");
+    if (!event.target.checkValidity()) return;
 
-    if (!event.target.checkValidity()) {
-      // form is invalid
-      alert("Please complete the whole form.");
-    } else {
-      const user = this.props.CurrentUser.user;
-      const pw = this.props.CurrentUser.pw;
-      const cuisine = this.props.CurrentUser.cuisine;
+    const user = this.props.CurrentUser.user;
+    const pw = this.props.CurrentUser.pw;
+    const cuisine = this.props.CurrentUser.cuisine;
 
-      fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: user,
-          password_digest: pw,
-          type: cuisine
-        })
-      })
-        .then(function(response) {
-          if (response.status >= 400) {
-            throw new Error("Bad response from server");
-          }
-          return response.json();
-        })
-        .then(function(data) {
-          console.log("Returned data: ", data);
-          if (data) {
-          }
-        })
-        .catch(function(err) {
-          console.log("Returned error: ", err);
-        });
-    }
+    fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
+    }).then(response => {
+      if (response.status >= 400) {
+        throw new Error("Bad response from server");
+      } else {
+        this.setState({ redirect: !this.state.redirect });
+      }
+    });
   }
 
   render() {
+    const { redirect } = this.state;
+    if (redirect) return <Redirect to="/chat" />;
     return (
       <div className="main-login-container">
         <div className="login-box">
@@ -121,4 +106,4 @@ class App extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(LogIn);
