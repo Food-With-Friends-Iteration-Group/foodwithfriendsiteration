@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import store from '../store';
 import { connect } from 'react-redux';
-import * as types from './reducers/actions';
+import * as types from '../actions/actions';
 import { Redirect } from 'react-router-dom';
 
 const mapDispatchToProps = store => ({ friends: store.friends });
@@ -12,8 +12,9 @@ class LogIn extends Component {
   constructor(props) {
     super(props);    
     this.state = {
-      redirect: false
-    }
+      // redirect: false,
+      food: ''
+    };
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
   }
@@ -33,10 +34,7 @@ class LogIn extends Component {
   submitHandler(event) {
     event.preventDefault()
     if (!event.target.checkValidity()) return;
- 
-    const user = this.props.CurrentUser.user;
-    const pw = this.props.CurrentUser.pw;
-    const cuisine = this.props.CurrentUser.cuisine;
+    const { user, pw, cuisine } = this.props.CurrentUser;
 
     fetch('/login', {
         method: 'POST',
@@ -46,14 +44,20 @@ class LogIn extends Component {
         if (response.status >= 400) {
           throw new Error("Bad response from server");
         } else {
-          this.setState({ redirect: !this.state.redirect })
+          store.dispatch(types.toggleLogIn());
+          // this.setState({
+          //   redirect: !this.state.redirect,
+          //   food: 'italian'
+          // })
+
         }
     })
   }
 
   render() {
-    const { redirect } = this.state;
-    if (redirect) return <Redirect to='/chat' />
+    const { cuisine } = this.props.CurrentUser
+    const { redirect } = this.props.CurrentUser;
+    if (redirect) return <Redirect to={`/chat/${cuisine}`} />
     return (
       <div className="main-login-container">
         <div className="login-box">

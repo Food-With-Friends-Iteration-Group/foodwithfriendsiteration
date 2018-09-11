@@ -9,12 +9,9 @@ const app = express();
 const PORT = 3000;
 
 const userController = require('./controllers/userController');
-const cuisineController = require('./controllers/cuisineController');
-const userCuisineController = require('./controllers/userCuisineController');
-// //
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://christine:passworddd@ds151382.mlab.com:51382/fwfiteration');
+mongoose.connect('mongodb://christine_c:shapeups3@ds151382.mlab.com:51382/fwfiteration');
 mongoose.connection.once('open', () => {
   console.log('Connected to Database');
 });
@@ -27,9 +24,6 @@ app.use(bodyParser.json());
 app.get("/*", express.static(__dirname));
 
 app.get("/login", userController.getUser);
-
-// app.get("/admin", userController.getAllUsers);
-
 app.post("/sign-up", userController.addUser);
 
 app.post(
