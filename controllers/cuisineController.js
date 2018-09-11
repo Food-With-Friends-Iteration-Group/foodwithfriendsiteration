@@ -1,22 +1,43 @@
-const cuisineModel = require('../models/Cuisine');
-const cuisineController = {};
+// const db = require("../dbConfig");
+const User = require("../models/UserSchemaModel");
 
-
-cuisineController.getAll = (req,res) => {
-  cuisineModel.findAll()
-  .then(data => res.json(data))
-  .catch( err => res.json(err));
-}
-
-cuisineController.getID = (req, res, next) => {
-  const {type} = req.body;
-
-  cuisineModel.findOne(type)
-  .then(data => {
-    res.locals.cuisine_id = data.id;
-    return next()
-  })
-  .catch( err => res.json(err));
-}
-
+const cuisineController = {
+  changeCuisine(req, res) {
+    User.findOneAndUpdate(
+      { loginName: "theirLoginName" },
+      { $set: { favoriteCuisine: "newCuisine" } },
+      (err, data) => {
+        if (err) {
+          res.send("trouble with db while trying to change the cuisine");
+        }else{
+          continue;
+        }
+      }
+    );
+  },
+  getCuisine(req, res) {
+    User.find({
+      // favoriteCuisine:req.locals.cuisine
+      favoriteCuisine: "cupOfNoodles"
+    });
+  }
+};
 module.exports = cuisineController;
+// module.exports = {
+//   findAll: () => {
+//     return db.any(`
+//     SELECT * FROM "user_cuisine"`);
+//   },
+
+//   //TODO: Have entires in table be temporary
+//   create: (user_id, cuisine_id) => {
+//     return db.one(
+//       `
+//       INSERT INTO "user_cuisine"(user_id, cuisine_id)
+//       VALUES ($1, $2)
+//       RETURNING *
+//     `,
+//       [user_id, cuisine_id]
+//     );
+//   }
+// };
