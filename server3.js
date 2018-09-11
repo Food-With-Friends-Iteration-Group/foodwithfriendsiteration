@@ -14,7 +14,7 @@ const userCuisineController = require('./controllers/userCuisineController');
 // //
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://christine:passworddd@ds151382.mlab.com:51382/fwfiteration');
+mongoose.connect('mongodb://christine_c:shapeups3@ds151382.mlab.com:51382/fwfiteration');
 mongoose.connection.once('open', () => {
   console.log('Connected to Database');
 });
