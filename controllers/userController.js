@@ -1,119 +1,69 @@
 // REQUIRE ANY MODELS, ETC.
+const User = require("../models/UserSchemaModel");
 
-const userModel = require('../models/User');
-const userController = {};
+const userController = {
+  getAll(req, res) {
+    User.find()
+      .then(data => {
+        res.json(data);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  },
+  //first chect is the user exists if they do ask them to sign in instead
+  checkForUser(req, res, next) {
+    User.findOne({ loginName: "name", password: "password" }, (err, data) => {
+      if (data) {
+        res.send(data);
+      } else {
+        next();
+      }
+    });
+  },
+  addUser(req, res) {
+    console.log("hey");
+    //adding a user to the db if they dont exist
+    const cuisineLover = new User({
+      loginName: "name",
+      password: "pass",
+      favoriteCuisine: "indian"
+    });
+    cuisineLover.save((err, data) => {
+      if (err) {
+        //if there is an error adding a person to the db send back this message
+        res.send("problem adding user to the database");
+      } else {
+        //if the person was added to the database, return that user object
+        res.send(data);
+      }
+    });
+  },
 
-
-/**
-* getAllUsers
-*
-* @param next - Callback Function w signature (err, users)
-*/
-userController.getAllUsers = (req, res) => {
-  userModel.findAllUsers()
-  .then( data => res.json(data))
-  .catch( err => console.log(err))
+  getUser(req, res) {
+    User.findOne(
+      {
+        loginName: "name",
+        password: "pass"
+      },
+      (err, data) => {
+        if (err) {
+          //maybe we have an error because the user doesnt exists?
+          res.send("user not found");
+        } else {
+          res.send(data);
+        }
+      }
+    );
+  },
+  removeUser(req, res) {
+    User.deleteOne({ loginName: "name", password: "pass" }, (err, data) => {
+      if (err) {
+        res.send("sorry could not delete user from the database");
+      } else {
+        res.send(data);
+      }
+    });
+  }
 };
-
-/**
- * getAllUser_Cuisine
- * 
- * 
- */
-userController.getUserCuisine = () => {
-  // query DB for user/cuisine table
-
-  // handle ERROR
-
-  // return result to VIEW PEOPLE page
-
-};
-
-
-/**
-* createUser - create a new User model and then save the user to the database.
-*
-* @param req - http.IncomingRequest
-* @param res - http.ServerResponse
-*/
-
-//TODO: setup error handling
-userController.createUser = (req, res, next) => {
-  userModel.createUser(req.body)
-  .then( data => res.json(data))
-  .catch( err => res.status(400).send('NOT VALID!'));
-  // if (typeof req.body.username === 'string' && typeof req.body.password === 'string') {
-  // }
-};
-
-/**
-* verifyUser - Obtain username and password from the request body, locate
-* the appropriate user in the database, and then authenticate the submitted password
-* against the password stored in the database.
-*
-* @param req - http.IncomingRequest
-* @param res - http.ServerResponse
-*/
-userController.verifyUser = (req, res, next) => {
-  const {email, password_digest} = req.body;
-  
-  console.log(email, password_digest);
-
-  userModel.findByEmail(email)
-  .then( data => {
-    const userPassword = data.password_digest;
-    
-    const isValidLogin = userController.validateLogin(password_digest, userPassword);
-
-    res.locals.user_id = data.id
-
-    return isValidLogin ? next() : res.status(400).json({msg: 'Incorrect login info'});
-  })
-  .catch( err => res.json({msg: err}));
-
-};
-
-userController.validateLogin = (loginAttempt, password_digest) =>{
-  return loginAttempt === password_digest ? true : false;
-}
-
 module.exports = userController;
-
-
-/////////SESSION CONTROLLERS
-
-
-// /**
-// * isLoggedIn - find the appropriate session for this request in the database, then
-// * verify whether or not the session is still valid.
-// *
-// *
-// */
-// sessionController.isLoggedIn = (req, res, next) => {
-//   // check if cookie exists
-//   if (!req.cookies.ssid) {
-//     return res.redirect('/signup');
-//   }
-//   // check ssid cookie
-//   Session.find({cookieId: req.cookies.ssid}, (err, resFind) => {
-//     next();
-//   });
-// };
-
-// /**
-// * startSession - create a new Session model and then save the new session to the
-// * database.
-// *
-// *
-// */
-// sessionController.startSession = (req, res, next) => {
-//   // cookieId -> value of the cookie name 'ssid'  === user id
-//   // send cookieId to DB, using sessionModel
-//   Session.create({ cookieId: res.locals.james }, (err, session) => {
-//     if (err) return console.log(`ERROR APPEARED IN STARTSESSION ${err}`);
-//     // console.log(`CREATED START SESSION ${session}`);
-//   });
-//   next();
-// };
-
-
