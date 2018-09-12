@@ -2,6 +2,7 @@ const FindFriends = 'FindFriends';
 const CurrentUser = 'CurrentUser';
 const CurrentPW = 'CurrentPW';
 const TIME_STAMP = 'TIME_STAMP';
+const TOGGLE_LOGIN = 'TOGGLE_LOGIN';
 
 const findFriends = () => ({types: FindFriends});
 
@@ -18,6 +19,10 @@ const currentUser = (value) => ({
 const updateTimestamp = (ts) => ({
   type: TIME_STAMP,
   timestamp: ts
+});
+
+const toggleLogIn = () => ({
+  type: TOGGLE_LOGIN
 })
 
 module.exports = {
@@ -27,5 +32,7 @@ module.exports = {
   currentUser,
   currentPW,
   CurrentPW,
+  TOGGLE_LOGIN,
+  toggleLogIn,
   updateTimestamp
 }

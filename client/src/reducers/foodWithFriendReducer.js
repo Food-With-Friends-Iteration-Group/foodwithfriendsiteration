@@ -1,4 +1,4 @@
-import * as types from './actions.js';
+import * as types from '../actions/actions';
 
 const initalState = {
   users: [
@@ -19,6 +19,7 @@ const initalState = {
   user: '',
   cuisine: 'Italian',
   isLoggedIn: true,
+  redirect: false
 }
 
 const findFriendsReducer = (state=initalState, action) => {
@@ -34,7 +35,10 @@ const findFriendsReducer = (state=initalState, action) => {
       let newCurrentPWState = Object.assign({}, state);
       newCurrentPWState.pw = action.pw;
       return newCurrentPWState; 
-
+    case types.TOGGLE_LOGIN:
+      let newToggleState = Object.assign({}, state);
+      newToggleState.redirect = !state.redirect;
+      return newToggleState;
     default:
       return state;
   }
