@@ -23,37 +23,33 @@ mongoose.connection.once('open', () => {
 });
 
 // Routes
-app.get("/*", express.static(__dirname));
-app.get("/login", userController.getUser);
-app.get("/dashboard", userController.getAll);
-app.post("/sign-up", userController.addUser);
-app.post(
-  "/login",
-  (req, res) => {
-    res.redirect("/dashboard");
-  }
-  );
+app.get('/*', express.static(__dirname));
+app.post('/login', userController.getUser);
+app.get('/dashboard', userController.getAll);
+app.post('/sign-up', userController.addUser);
 // Socket connection
 const io = socketIo(server);
 
 const ital = io.of('/italian');
 ital.on('connection', socket => {
-  console.log('socket.io/italian')
   socket.on('chat message', message => {
-    console.log(message);
     socket.broadcast.emit('broadcast', message)
   });
 });
 
-// io.on("connection", socket => {
-//   console.log('global')
-//   socket.on("chat message", function(msg) {
-//     socket.broadcast.emit("broadcast", msg);
-//   });
-//   socket.on("disconnect", () => console.log("disconnected in server"));
-// });
+const french = io.of('/french');
+french.on('connection', socket => {
+  socket.on('chat message', message => {
+    socket.broadcast.emit('broadcast', message)
+  });
+});
 
-
+const mexican = io.of('/mexican');
+mexican.on('connection', socket => {
+  socket.on('chat message', message => {
+    socket.broadcast.emit('broadcast', message)
+  });
+});
 
 server.listen(PORT, () => console.log(`listening on ${PORT}`));
 

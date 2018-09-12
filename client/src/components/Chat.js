@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import openSocket from 'socket.io-client';
 
 const mapStateToProps = store => ({
-  user: store.friends.user,
+  email: store.friends.email,
   cuisine: store.friends.cuisine
 }); 
 
@@ -33,8 +33,8 @@ class Chat extends Component {
 
   handleOnClick(){
     const { message } = this.state;
-    const { user } = this.props;
-    const newMessage = { user, message };
+    const { email } = this.props;
+    const newMessage = { email, message };
     this.setState({
       message: '',
       messages: [...this.state.messages, newMessage ]
@@ -44,7 +44,7 @@ class Chat extends Component {
   }
 
   render() {
-    const messages = this.state.messages.map((msg, i) => <li key={i}>{msg.user.toUpperCase()}: {msg.message}</li>)
+    const messages = this.state.messages.map((msg, i) => <li key={i}>{msg.email.toUpperCase()}: {msg.message}</li>)
     return (
       <div>
         <ul className="msg-box" id="messages">
