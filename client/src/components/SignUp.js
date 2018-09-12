@@ -74,12 +74,12 @@ class SignUp extends Component {
           name="cuisine" 
           value={this.state.value} 
           onChange={this.handleChange}>
-            <option value="greek">Greek</option>
-            <option value="colombian">Colombian</option>
-            <option value="ethiopian">Ethiopian</option>
-            <option value="english">English</option>
+            <option value="italian">Italian</option>
+            <option value="french">French</option>
+            <option value="mexican">Mexican</option>
+            {/* <option value="english">English</option>
             <option value="nepalese">Nepalese</option>
-            <option value="laotian">Laotian</option>
+            <option value="laotian">Laotian</option> */}
         </select>
         <input type="submit" value="Submit" onSubmit={this.handleSubmit} />
         </form>  

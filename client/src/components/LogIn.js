@@ -32,22 +32,21 @@ class LogIn extends Component {
     event.preventDefault();
     if (!event.target.checkValidity()) return;
     const { email, password } = this.props.CurrentUser;
-    console.log( email, password );
-
     fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ email, password }),
-      }).then(response => {
+      })
+      .then(res => res.json())
+      .then(response => {
         if (response.status >= 400) {
           throw new Error("Bad response from server");
         } else {
+          console.log(response)
+          const { username, cuisine } = response;
+          store.dispatch(types.updateUsername(username));
+          store.dispatch(types.updateCuisine(cuisine));
           store.dispatch(types.toggleLogIn());
-          // this.setState({
-          //   redirect: !this.state.redirect,
-          //   food: 'italian'
-          // })
-
         }
     })
   }

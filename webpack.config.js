@@ -9,9 +9,6 @@ module.exports = {
     port: 3001,
     // hotOnly: true,
     publicPath: '/build',
-    // proxy: {
-    //   '/api': 'http://localhost:3000 '
-    // }
     proxy: {
       '**': {
           target: 'http://localhost:3000',
