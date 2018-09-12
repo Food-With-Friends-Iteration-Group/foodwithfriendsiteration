@@ -348,11 +348,20 @@ var Chat = function (_Component) {
   }, {
     key: "handleOnChange",
     value: function handleOnChange(event) {
+      // if (event.keyCode === 13) {
+      console.log(event.keyCode);
+      // }
+
       this.setState({ message: event.target.value });
+      // if (event.keyCode === 13) {
+      //   console.log("yes!!");
+      // }
     }
   }, {
     key: "handleOnClick",
     value: function handleOnClick() {
+      // alert("key event that triggers emit event", event);
+
       var message = this.state.message;
       var user = this.props.user;
 

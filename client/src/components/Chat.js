@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import React, { Component } from "react";
 import { subscribeToMessages, socket } from "./Api";
 
-//bringing in all the friends from the store
 const mapStateToProps = store => ({
   user: store.friends.user
 });
@@ -16,6 +15,7 @@ class Chat extends Component {
     };
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleOnClick = this.handleOnClick.bind(this);
+    this.enterPressed = this.enterPressed.bind(this);
   }
   componentDidMount() {
     subscribeToMessages(message => {
@@ -25,8 +25,9 @@ class Chat extends Component {
     });
   }
 
-  handleOnChange(event) {
-    this.setState({ message: event.target.value });
+  handleOnChange(e) {
+    e.preventDefault();
+    this.setState({ message: e.target.value });
   }
 
   handleOnClick() {
@@ -44,6 +45,13 @@ class Chat extends Component {
     );
   }
 
+  enterPressed(e) {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      this.handleOnClick(e);
+      e.target.value = "";
+    }
+  }
   render() {
     const messages = this.state.messages.map((msg, i) => (
       <li key={i}>
@@ -57,10 +65,12 @@ class Chat extends Component {
         </ul>
         <form className="msg-box-form" action="">
           <input
+            value={this.state.message}
             className="msg-inbox"
             id="m"
             autoComplete="off"
-            onChange={event => this.handleOnChange(event)}
+            onChange={e => this.handleOnChange(e)}
+            onKeyDown={e => this.enterPressed(e)}
           />
           <button
             type="button"
