@@ -49,9 +49,10 @@ class Chat extends Component {
   }
 
   enterPressed(e) {
-    e.preventDefault();
     if (e.keyCode == 13) {
+      e.preventDefault();
       this.handleOnClick(e);
+      e.target.value = "";
     }
   }
   render() {
@@ -67,11 +68,12 @@ class Chat extends Component {
         </ul>
         <form className="msg-box-form" action="">
           <input
+            value={this.state.message}
             className="msg-inbox"
             id="m"
             autoComplete="off"
-            value={this.state.message}
-            onChange={event => this.handleOnChange(event)}
+            onChange={e => this.handleOnChange(e)}
+            onKeyDown={e => this.enterPressed(e)}
           />
           <button
             type="button"
@@ -81,6 +83,23 @@ class Chat extends Component {
           >
             Send
           </button>
+          {/* {" "} */}
+          {/* <input
+            className="msg-inbox"
+            id="m"
+            autoComplete="off"
+            value={this.state.message}
+            onChange={event => this.handleOnChange(event)}
+          /> */}
+          {/* //{" "} */}
+          {/* <button
+            type="button"
+            id="msg-btn-enter"
+            onClick={() => this.handleOnClick()}
+            className="button msg-btn bg-green"
+          >
+            Send
+          </button> */}
         </form>
       </div>
     );
