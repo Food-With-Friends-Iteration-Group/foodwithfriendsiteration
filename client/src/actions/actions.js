@@ -1,38 +1,42 @@
-const FindFriends = 'FindFriends';
-const CurrentUser = 'CurrentUser';
-const CurrentPW = 'CurrentPW';
-const TIME_STAMP = 'TIME_STAMP';
+const UPDATE_EMAIL = 'UPDATE_EMAIL';
+const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
 const TOGGLE_LOGIN = 'TOGGLE_LOGIN';
+const UPDATE_USERNAME = 'UPDATE_USERNAME';
+const UPDATE_CUISINE = 'UPDATE_CUISINE';
 
-const findFriends = () => ({types: FindFriends});
-
-const currentPW = (value) => ({
-  type: CurrentPW,
-  pw: value,
+const updateEmail = (email) => ({
+  type: UPDATE_EMAIL, 
+  email,
 });
 
-const currentUser = (value) => ({
-  type: CurrentUser, 
-  user: value,
-});
-
-const updateTimestamp = (ts) => ({
-  type: TIME_STAMP,
-  timestamp: ts
+const updatePassword = (password) => ({
+  type: UPDATE_PASSWORD,
+  password
 });
 
 const toggleLogIn = () => ({
   type: TOGGLE_LOGIN
 })
 
+const updateUsername = username => ({
+  type: UPDATE_USERNAME,
+  username
+})
+
+const updateCuisine = cuisine =>({
+  type: UPDATE_CUISINE,
+  cuisine
+})
+
 module.exports = {
-  FindFriends,
-  findFriends,
-  CurrentUser,
-  currentUser,
-  currentPW,
-  CurrentPW,
-  TOGGLE_LOGIN,
+  updateEmail,
+  UPDATE_EMAIL,
+  updatePassword,
+  UPDATE_PASSWORD,
+  updateUsername,
+  UPDATE_USERNAME,
+  updateCuisine,
+  UPDATE_CUISINE,
   toggleLogIn,
-  updateTimestamp
+  TOGGLE_LOGIN
 }

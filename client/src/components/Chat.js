@@ -1,24 +1,27 @@
 import { connect } from "react-redux";
 import React, { Component } from "react";
-import { subscribeToMessages, socket } from "./Api";
+import openSocket from "socket.io-client";
 
 const mapStateToProps = store => ({
-  user: store.friends.user
+  username: store.friends.username,
+  cuisine: store.friends.cuisine
 });
 
 class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      socket: openSocket(`http://localhost:3000/${this.props.cuisine}`),
       message: "",
       messages: []
     };
+    this.subscribeToMessages();
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleOnClick = this.handleOnClick.bind(this);
     this.enterPressed = this.enterPressed.bind(this);
   }
-  componentDidMount() {
-    subscribeToMessages(message => {
+  subscribeToMessages() {
+    this.state.socket.on("broadcast", message => {
       this.setState({
         messages: [...this.state.messages, message]
       });
@@ -31,31 +34,30 @@ class Chat extends Component {
   }
 
   handleOnClick() {
+    const { username } = this.props;
     const { message } = this.state;
-    const { user } = this.props;
-    const newMessage = { user, message };
+    const newMessage = { username, message };
     this.setState(
       {
         message: "",
         messages: [...this.state.messages, newMessage]
       },
       () => {
-        socket.emit("chat message", newMessage);
+        this.state.socket.emit("chat message", newMessage);
       }
     );
   }
 
   enterPressed(e) {
+    e.preventDefault();
     if (e.keyCode == 13) {
-      e.preventDefault();
       this.handleOnClick(e);
-      e.target.value = "";
     }
   }
   render() {
     const messages = this.state.messages.map((msg, i) => (
       <li key={i}>
-        {msg.user.toUpperCase()}: {msg.message}
+        {msg.username.toUpperCase()}: {msg.message}
       </li>
     ));
     return (
@@ -65,12 +67,11 @@ class Chat extends Component {
         </ul>
         <form className="msg-box-form" action="">
           <input
-            value={this.state.message}
             className="msg-inbox"
             id="m"
             autoComplete="off"
-            onChange={e => this.handleOnChange(e)}
-            onKeyDown={e => this.enterPressed(e)}
+            value={this.state.message}
+            onChange={event => this.handleOnChange(event)}
           />
           <button
             type="button"

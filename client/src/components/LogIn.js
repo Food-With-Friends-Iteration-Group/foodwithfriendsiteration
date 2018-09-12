@@ -19,37 +19,36 @@ class LogIn extends Component {
   }
 
   changeHandler(event) {
-    const value = event.target.value;
-    const name = event.target.name;
+    const { name, value } = event.target;
 
-    // set state
-    if (name === "user") {
-      store.dispatch(types.currentUser(value));
-    } else if (name === "pw") {
-      store.dispatch(types.currentPW(value));
+    if (name === "email") {
+      store.dispatch(types.updateEmail(value));
+    } else if (name === "password") {
+      store.dispatch(types.updatePassword(value));
     }
   }
 
   submitHandler(event) {
     event.preventDefault();
     if (!event.target.checkValidity()) return;
-    const { user, pw, cuisine } = this.props.CurrentUser;
-
+    const { email, password } = this.props.CurrentUser;
     fetch("/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
-    }).then(response => {
-      if (response.status >= 400) {
-        throw new Error("Bad response from server");
-      } else {
+      body: JSON.stringify({ email, password })
+    })
+      .then(res => {
+        if (res.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return res.json();
+      })
+      .then(response => {
+        const { username, cuisine } = response;
+        store.dispatch(types.updateUsername(username));
+        store.dispatch(types.updateCuisine(cuisine));
         store.dispatch(types.toggleLogIn());
-        // this.setState({
-        //   redirect: !this.state.redirect,
-        //   food: 'italian'
-        // })
-      }
-    });
+      });
   }
 
   render() {
@@ -63,7 +62,7 @@ class LogIn extends Component {
             <label>
               Email:
               <input
-                name="user"
+                name="email"
                 type="text"
                 value={this.props.CurrentUser.user}
                 onChange={this.changeHandler}
@@ -74,20 +73,12 @@ class LogIn extends Component {
             <label>
               Password:
               <input
-                placeholder="password"
-                name="pw"
+                name="password"
                 type="password"
                 value={this.props.CurrentUser.pw}
                 onChange={this.changeHandler}
                 required
               />
-            </label>
-            <label>
-              Cuisine:
-              <select>
-                <option value="Italian">Italian</option>
-                <option value="French">French</option>
-              </select>
             </label>
             <button
               className="button form-button bg-green"
