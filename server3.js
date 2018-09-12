@@ -42,13 +42,18 @@ app.get("/sign-up", (req, res) => {
 const server = http.createServer(app);
 const io = socketIo(server);
 
+let nsp = io.of("/loginA");
+nsp.on("connection", socket => {
+  console.log("we are on a namespace");
+});
+nsp.emit("hi", "hi people");
+
 io.on("connection", socket => {
   socket.on("chat message", function(msg) {
     socket.broadcast.emit("broadcast", msg);
   });
   socket.on("disconnect", () => console.log("disconnected in server"));
 });
-
 server.listen(PORT, () => console.log(`listening on ${PORT}`));
 
 module.exports = app;

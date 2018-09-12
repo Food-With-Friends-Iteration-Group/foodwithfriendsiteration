@@ -218,29 +218,39 @@ function _inherits(subClass, superClass) {
 }
 
 var endpoint = "http://localhost:3000";
+//should this be /chat/cuisine
+// let endpoint = "http://localhost:3000/chat/?";
 
+//bringing in all the friends from the store
 var mapStateToProps = function mapStateToProps(store) {
   return {
     findFriends: store.friends
   };
 };
 
+//connecting socketIO to that endpoint
 var socket = (0, _socket2.default)(endpoint);
-
-socket.on('broadcast', function (msg) {
-  $('#messages').append($('<li class="user2" id=' + msg + '>'));
-  $('#' + msg).append($('<div>').text(msg));
-  $('#' + msg).append($('<span>').text('User2'));
+socket.on("broadcast", function (msg) {
+  //add an li to the ul and create an id on the li that is the message typed in
+  $("#messages").append($('<li class="user2" id=' + msg + ">"));
+  //append a div with a text to the li that you just created by getting it by its id(which is the message)
+  $("#" + msg).append($("<div>").text(msg));
+  //append a span wiht a text User2 to the li
+  $("#" + msg).append($("<span>").text("User2"));
 });
 function sendMsg() {
-  socket.emit('chat message', $('#m').val());
-  var val = $('#m').val();
-  $('#messages').append($('<li class="user1" id=' + val + '>'));
-  $('#' + val).append($('<span>').text('User1'));
-  $('#' + val).append($('<div>').text(val));
-  $('#m').val('');
+  io.sockets.emit("hi", "everyone");
+  // socket.emit("chat message", $("#m").val());
+  //get the value of the input
+  var val = $("#m").val();
+  //append an li ot the ul with an id of the input value
+  $("#messages").append($('<li class="user1" id=' + val + ">"));
+  //
+  $("#" + val).append($("<span>").text("User1"));
+  $("#" + val).append($("<div>").text(val));
+  $("#m").val("");
   return false;
-};
+}
 
 var ChatBox = function (_Component) {
   _inherits(ChatBox, _Component);
@@ -252,9 +262,14 @@ var ChatBox = function (_Component) {
   }
 
   _createClass(ChatBox, [{
-    key: 'render',
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('div', null, _react2.default.createElement('ul', { className: 'msg-box', id: 'messages' }), _react2.default.createElement('form', { className: 'msg-box-form', action: '' }, _react2.default.createElement('input', { className: 'msg-inbox', id: 'm', autoComplete: 'off' }), _react2.default.createElement('button', { type: 'button', id: 'msg-btn-enter', onClick: sendMsg, className: 'button msg-btn bg-green' }, 'Send')));
+      return _react2.default.createElement("div", null, _react2.default.createElement("ul", { className: "msg-box", id: "messages" }), _react2.default.createElement("form", { className: "msg-box-form", action: "" }, _react2.default.createElement("input", { className: "msg-inbox", id: "m", autoComplete: "off" }), _react2.default.createElement("button", {
+        type: "button",
+        id: "msg-btn-enter",
+        onClick: sendMsg,
+        className: "button msg-btn bg-green"
+      }, "Send")));
     }
   }]);
 
@@ -406,21 +421,21 @@ var App = function (_Component) {
   }
 
   _createClass(App, [{
-    key: 'changeHandler',
+    key: "changeHandler",
     value: function changeHandler(event) {
       var value = event.target.value;
       var name = event.target.name;
 
       // set state
-      if (name === 'user') {
+      if (name === "user") {
         _store2.default.dispatch(types.currentUser(value));
-      } else if (name === 'pw') {
+      } else if (name === "pw") {
         _store2.default.dispatch(types.currentPW(value));
       }
       console.log("props", this.props);
     }
   }, {
-    key: 'submitHandler',
+    key: "submitHandler",
     value: function submitHandler(event) {
       event.preventDefault();
       console.log("submitting");
@@ -433,10 +448,14 @@ var App = function (_Component) {
         var pw = this.props.CurrentUser.pw;
         var cuisine = this.props.CurrentUser.cuisine;
 
-        fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
+        fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: user,
+            password_digest: pw,
+            type: cuisine
+          })
         }).then(function (response) {
           if (response.status >= 400) {
             throw new Error("Bad response from server");
@@ -444,32 +463,33 @@ var App = function (_Component) {
           return response.json();
         }).then(function (data) {
           console.log("Returned data: ", data);
-          if (data) {
-            ;
-          }
+          if (data) {}
         }).catch(function (err) {
           console.log("Returned error: ", err);
         });
       }
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', onSubmit: this.submitHandler, noValidate: true }, _react2.default.createElement('label', null, 'Email:', _react2.default.createElement('input', {
-        name: 'user',
-        type: 'text',
+      return _react2.default.createElement("div", { className: "main-login-container" }, _react2.default.createElement("div", { className: "login-box" }, _react2.default.createElement("form", { className: "flex-form", onSubmit: this.submitHandler, noValidate: true }, _react2.default.createElement("label", null, "Email:", _react2.default.createElement("input", {
+        name: "user",
+        type: "text",
         value: this.props.CurrentUser.user,
         onChange: this.changeHandler,
-        placeholder: 'email',
-        required: true })), _react2.default.createElement('label', null, 'Password:', _react2.default.createElement('input', {
-        name: 'pw',
-        type: 'password',
+        placeholder: "email",
+        required: true
+      })), _react2.default.createElement("label", null, "Password:", _react2.default.createElement("input", {
+        name: "pw",
+        type: "password",
         value: this.props.CurrentUser.pw,
         onChange: this.changeHandler,
-        required: true })), _react2.default.createElement('label', null, 'Cuisine:', _react2.default.createElement('select', null, _react2.default.createElement('option', { value: 'Italian' }, 'Italian'), _react2.default.createElement('option', { value: 'French' }, 'French'))), _react2.default.createElement('button', {
-        className: 'button form-button bg-green',
-        type: 'submit',
-        value: 'submit' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
+        required: true
+      })), _react2.default.createElement("label", null, "Cuisine:", _react2.default.createElement("select", null, _react2.default.createElement("option", { value: "Italian" }, "Italian"), _react2.default.createElement("option", { value: "French" }, "French"))), _react2.default.createElement("button", {
+        className: "button form-button bg-green",
+        type: "submit",
+        value: "submit"
+      }, "Log In")), _react2.default.createElement("div", { className: "button bg-blue" }, _react2.default.createElement(_reactRouterDom.Link, { to: "/sign-up" }, "Sign Up"))));
     }
   }]);
 
@@ -521,7 +541,7 @@ function _interopRequireDefault(obj) {
 }
 
 var Main = function Main() {
-  return _react2.default.createElement('main', null, _react2.default.createElement(_reactRouterDom.Switch, null, _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _login2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/sign-up', component: _signUp2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/find-friends', component: _findFriends2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/chat-box', component: _chatBox2.default })));
+  return _react2.default.createElement("main", null, _react2.default.createElement(_reactRouterDom.Switch, null, _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: _login2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: "/sign-up", component: _signUp2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: "/find-friends", component: _findFriends2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: "/chat-box", component: _chatBox2.default })));
 };
 
 exports.default = Main;
@@ -851,7 +871,7 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-(0, _reactDom.render)(_react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement(_reactRedux.Provider, { store: _store2.default }, _react2.default.createElement(_app2.default, null))), document.getElementById('login-sign-up'));
+(0, _reactDom.render)(_react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement(_reactRedux.Provider, { store: _store2.default }, _react2.default.createElement(_app2.default, null))), document.getElementById("login-sign-up"));
 
 /***/ }),
 
