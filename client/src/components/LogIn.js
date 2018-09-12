@@ -37,17 +37,17 @@ class LogIn extends Component {
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ email, password }),
       })
-      .then(res => res.json())
-      .then(response => {
-        if (response.status >= 400) {
+      .then(res => {
+        if (res.status >= 400) {
           throw new Error("Bad response from server");
-        } else {
-          console.log(response)
-          const { username, cuisine } = response;
-          store.dispatch(types.updateUsername(username));
-          store.dispatch(types.updateCuisine(cuisine));
-          store.dispatch(types.toggleLogIn());
         }
+        return res.json()
+      })
+      .then(response => {
+        const { username, cuisine } = response;
+        store.dispatch(types.updateUsername(username));
+        store.dispatch(types.updateCuisine(cuisine));
+        store.dispatch(types.toggleLogIn());
     })
   }
 
@@ -79,13 +79,6 @@ class LogIn extends Component {
                 onChange={this.changeHandler}
                 required
               />
-            </label>
-            <label>
-              Cuisine:
-              <select>
-                <option value="Italian">Italian</option>
-                <option value="French">French</option>
-              </select>
             </label>
             <button
               className="button form-button bg-green"
