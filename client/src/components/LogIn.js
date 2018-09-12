@@ -19,26 +19,25 @@ class LogIn extends Component {
   }
 
   changeHandler(event) {
-    const value = event.target.value;
-    const name = event.target.name;
+    const { name, value } = event.target;
 
-    // set state
-    if (name === "user") {
-      store.dispatch(types.currentUser(value));
-    } else if (name === "pw") {
-      store.dispatch(types.currentPW(value));
+    if (name === "email") {
+      store.dispatch(types.updateEmail(value));
+    } else if (name === "password") {
+      store.dispatch(types.updatePassword(value));
     }
   }
 
   submitHandler(event) {
     event.preventDefault();
     if (!event.target.checkValidity()) return;
-    const { user, pw, cuisine } = this.props.CurrentUser;
+    const { email, password } = this.props.CurrentUser;
+    console.log( email, password );
 
     fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
-        body: JSON.stringify({ email: user, password_digest: pw, type: cuisine }),
+        body: JSON.stringify({ email, password }),
       }).then(response => {
         if (response.status >= 400) {
           throw new Error("Bad response from server");
@@ -64,7 +63,7 @@ class LogIn extends Component {
             <label>
               Email:
               <input
-                name="user"
+                name="email"
                 type="text"
                 value={this.props.CurrentUser.user}
                 onChange={this.changeHandler}
@@ -75,7 +74,7 @@ class LogIn extends Component {
             <label>
               Password:
               <input
-                name="pw"
+                name="password"
                 type="password"
                 value={this.props.CurrentUser.pw}
                 onChange={this.changeHandler}

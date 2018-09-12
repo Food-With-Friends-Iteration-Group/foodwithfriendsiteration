@@ -1,24 +1,15 @@
-const FindFriends = 'FindFriends';
-const CurrentUser = 'CurrentUser';
-const CurrentPW = 'CurrentPW';
-const TIME_STAMP = 'TIME_STAMP';
+const UPDATE_EMAIL = 'UPDATE_EMAIL';
+const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
 const TOGGLE_LOGIN = 'TOGGLE_LOGIN';
 
-const findFriends = () => ({types: FindFriends});
-
-const currentPW = (value) => ({
-  type: CurrentPW,
-  pw: value,
+const updateEmail = (email) => ({
+  type: UPDATE_EMAIL, 
+  email,
 });
 
-const currentUser = (value) => ({
-  type: CurrentUser, 
-  user: value,
-});
-
-const updateTimestamp = (ts) => ({
-  type: TIME_STAMP,
-  timestamp: ts
+const updatePassword = (password) => ({
+  type: UPDATE_PASSWORD,
+  password
 });
 
 const toggleLogIn = () => ({
@@ -26,13 +17,10 @@ const toggleLogIn = () => ({
 })
 
 module.exports = {
-  FindFriends,
-  findFriends,
-  CurrentUser,
-  currentUser,
-  currentPW,
-  CurrentPW,
-  TOGGLE_LOGIN,
+  updateEmail,
+  UPDATE_EMAIL,
+  updatePassword,
+  UPDATE_PASSWORD,
   toggleLogIn,
-  updateTimestamp
+  TOGGLE_LOGIN
 }
