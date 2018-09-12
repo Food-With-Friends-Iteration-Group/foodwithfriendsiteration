@@ -7,9 +7,9 @@ import Chat from './Chat';
 const MainRouter = () => (
   <main>
     <Switch>
-      <Route exact path='/' component={LogIn}/>
-      <Route path='/sign-up' component={SignUp}/>
-      <Route path='/chat' component={Chat}/>
+      <Route exact path='/' component={LogIn} />
+      <Route path='/sign-up' component={SignUp} />
+      <Route path='/chat' component={Chat} />
     </Switch>
   </main>
 )
