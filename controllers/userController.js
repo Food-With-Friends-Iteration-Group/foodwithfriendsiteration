@@ -21,12 +21,7 @@ const userController = {
       }
     });
   },
-<<<<<<< HEAD
-  addUser: (req, res) => {
-=======
   addUser: (req, res, next) => {
-    console.log('IN ADD USER ');
->>>>>>> adbd9f14496804805e7ae490e1b48c10a18dfe68
     const saltRounds = 10;
     const username = req.body.username
     const email = req.body.email
@@ -43,13 +38,8 @@ const userController = {
           password,
           cuisine
         })
-<<<<<<< HEAD
-        
-        User.save((err, savedUser) => {
-=======
         console.log('USER IS: ', user);
         user.save((err, savedUser) => {
->>>>>>> adbd9f14496804805e7ae490e1b48c10a18dfe68
           if (err) {
             res.send("problem adding user to the database");
           } else {
@@ -64,20 +54,24 @@ const userController = {
         })
       }
     })
-
-    
   },
 
   getUser: (req, res) => {
     const { email, password } = req.body;
-    console.log({ email, password })
     User.findOne({ email }, (err, result) => {
         if (err) return res.status(500).send(err)
         if (!result) return res.status(500).send(result)
-        if (result.password !== password) {
-          return res.status(500).send({})
-        }
-        return res.status(200).send({ cuisine: result.cuisine })
+        const { username, cuisine } = result;
+        console.log({ username, cuisine })
+        bcrypt.compare(password, result.password, (err, match) => {
+          if (err) return res.status(500).send(err);
+          if (!match) return res.status(500).send({});
+          return res.status(200).send({ username, cuisine });
+        })
+        // if (result.password !== password) {
+        //   return res.status(500).send({})
+        // }
+        // return res.status(200).send({ cuisine: result.cuisine })
       }
     );
   },
