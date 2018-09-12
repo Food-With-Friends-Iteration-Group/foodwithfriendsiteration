@@ -1,13 +1,14 @@
-const bodyParser = require("body-parser");
 const express = require("express");
 const path = require("path");
-const cookieParser = require('cookie-parser');
+const bodyParser = require("body-parser");
 const http = require("http");
+
+const cookieParser = require('cookie-parser');
 const socketIo = require("socket.io");
 
 const app = express();
-const PORT = 3000;
 const server = http.createServer(app);
+const PORT = 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -48,9 +49,6 @@ app.get("/dashboard", userController.getAll);
 app.post("/sign-up", userController.addUser);
 app.post(
   "/login",
-  // userController.verifyUser,
-  // cuisineController.getID,
-  // userCuisineController.add,
   (req, res) => {
     res.redirect("/dashboard");
   }

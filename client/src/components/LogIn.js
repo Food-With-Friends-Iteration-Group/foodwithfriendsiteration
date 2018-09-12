@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import store from "../store";
-import { connect } from "react-redux";
-import * as types from "./reducers/actions";
-import { Redirect } from "react-router-dom";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import store from '../store';
+import { connect } from 'react-redux';
+import * as types from '../actions/actions';
+import { Redirect } from 'react-router-dom';
 
 const mapDispatchToProps = store => ({ friends: store.friends });
 const mapStateToProps = store => ({ CurrentUser: store.friends });
@@ -33,27 +33,30 @@ class LogIn extends Component {
   submitHandler(event) {
     event.preventDefault();
     if (!event.target.checkValidity()) return;
+    const { user, pw, cuisine } = this.props.CurrentUser;
 
-    const user = this.props.CurrentUser.user;
-    const pw = this.props.CurrentUser.pw;
-    const cuisine = this.props.CurrentUser.cuisine;
+    fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify({ email: user, password_digest: pw, type: cuisine }),
+      }).then(response => {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        } else {
+          store.dispatch(types.toggleLogIn());
+          // this.setState({
+          //   redirect: !this.state.redirect,
+          //   food: 'italian'
+          // })
 
-    fetch("/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
-    }).then(response => {
-      if (response.status >= 400) {
-        throw new Error("Bad response from server");
-      } else {
-        this.setState({ redirect: !this.state.redirect });
-      }
-    });
+        }
+    })
   }
 
   render() {
-    const { redirect } = this.state;
-    if (redirect) return <Redirect to="/chat" />;
+    const { cuisine } = this.props.CurrentUser
+    const { redirect } = this.props.CurrentUser;
+    if (redirect) return <Redirect to={`/chat/${cuisine}`} />
     return (
       <div className="main-login-container">
         <div className="login-box">
