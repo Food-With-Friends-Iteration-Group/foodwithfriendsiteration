@@ -11,6 +11,6 @@ render(
     <Provider store={store}>
       <App />
     </Provider>
-  </BrowserRouter>
-),
-  document.getElementById("login-sign-up");
+  </BrowserRouter>,
+  document.getElementById("login-sign-up")
+);
