@@ -21,23 +21,35 @@ const userController = {
       }
     });
   },
+<<<<<<< HEAD
   addUser: (req, res) => {
+=======
+  addUser: (req, res, next) => {
+    console.log('IN ADD USER ');
+>>>>>>> adbd9f14496804805e7ae490e1b48c10a18dfe68
     const saltRounds = 10;
+    const username = req.body.username
+    const email = req.body.email
     const password = req.body.password;
-    const loginName = req.body.loginName
-    const favoriteCuisine = req.body.favoriteCuisine
+    const cuisine = req.body.cuisine
 
-    bcrypt.hash(password, saltRounds, (err, hash) => {
+    bcrypt.hash(password, saltRounds, (err, password) => {
       if (err) {
         res.status(400).send('Sorry, there was a hashing error: ', err)
       } else {
         const user = new User({
-          loginName: loginName,
-          password: hash,
-          favoriteCuisine: favoriteCuisine
+          username,
+          email,
+          password,
+          cuisine
         })
+<<<<<<< HEAD
         
         User.save((err, savedUser) => {
+=======
+        console.log('USER IS: ', user);
+        user.save((err, savedUser) => {
+>>>>>>> adbd9f14496804805e7ae490e1b48c10a18dfe68
           if (err) {
             res.send("problem adding user to the database");
           } else {
@@ -45,12 +57,15 @@ const userController = {
             let randomNum = Math.random().toString();
             randomNum = randomNum.substring(2, randomNum.length);
             res.cookie('FOODcookie', randomNum, { maxAge: 900000, httpOnly: true });
-            console.log('cookie created successfully');
-            res.send(savedUser);
+            console.log('COOKIE SUCCESS; RES.SENDING NOW');
+            res.status(200).send(savedUser);
+            // next()
           }
         })
       }
     })
+
+    
   },
 
   getUser: (req, res) => {
