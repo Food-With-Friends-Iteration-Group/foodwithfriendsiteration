@@ -5,7 +5,7 @@ const cuisineController = {
   changeCuisine(req, res) {
     User.findOneAndUpdate(
       { loginName: "theirLoginName" },
-      { $set: { favoriteCuisine: "newCuisine" } },
+      { $set: { favoriteCuisine: "newCuisine" } },{new:true},
       (err, data) => {
         if (err) {
           res.send("trouble with db while trying to change the cuisine");
