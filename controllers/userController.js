@@ -1,5 +1,6 @@
 // REQUIRE ANY MODELS, ETC.
 const User = require("../models/UserSchemaModel");
+const bcrypt = require('bcrypt');
 
 const userController = {
   getAll(req, res) {
@@ -22,22 +23,35 @@ const userController = {
     });
   },
   addUser(req, res) {
-    console.log("hey");
-    //adding a user to the db if they dont exist
-    const cuisineLover = new User({
-      loginName: "name",
-      password: "pass",
-      favoriteCuisine: "indian"
-    });
-    cuisineLover.save((err, data) => {
+    const saltRounds = 10;
+    const password = req.body.password;
+    const loginName = req.body.loginName
+    const favoriteCuisine = req.body.favoriteCuisine
+
+    bcrypt.hash(password, saltRounds, (err, hash) => {
       if (err) {
-        //if there is an error adding a person to the db send back this message
-        res.send("problem adding user to the database");
+        res.status(400).send('Sorry, there was a hashing error: ', err)
       } else {
-        //if the person was added to the database, return that user object
-        res.send(data);
+        const user = new User({
+          loginName: loginName,
+          password: hash,
+          favoriteCuisine: favoriteCuisine
+        })
+        
+        user.save((err, savedUser) => {
+          if (err) {
+            res.send("problem adding user to the database");
+          } else {
+            // set cookie after successfully saving user
+            let randomNum = Math.random().toString();
+            randomNum = randomNum.substring(2, randomNum.length);
+            res.cookie('FOODcookie', randomNum, { maxAge: 900000, httpOnly: true });
+            console.log('cookie created successfully');
+            res.send(savedUser);
+          }
+        })
       }
-    });
+    })
   },
 
   getUser(req, res) {

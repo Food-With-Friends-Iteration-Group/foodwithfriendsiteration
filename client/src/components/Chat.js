@@ -1,51 +1,71 @@
 import { connect } from "react-redux";
 import React, { Component } from "react";
-import socketIOClient from "socket.io-client";
-
-const endpoint = "http://localhost:3000";
+import { subscribeToMessages, socket } from "./Api";
 
 //bringing in all the friends from the store
 const mapStateToProps = store => ({
-  findFriends: store.friends
+  user: store.friends.user
 });
-const socket = socketIOClient(endpoint);
-
-socket.on("broadcast", function(msg) {
-  $("#messages").append($('<li class="user2" id=' + msg + ">"));
-  $("#" + msg).append($("<div>").text(msg));
-  $("#" + msg).append($("<span>").text("User2"));
-});
-
-function sendMsg() {
-  io.sockets.emit("hi", "everyone");
-  // socket.emit("chat message", $("#m").val());
-  //get the value of the input
-  let val = $("#m").val();
-  //append an li ot the ul with an id of the input value
-  $("#messages").append($('<li class="user1" id=' + val + ">"));
-  //
-  $("#" + val).append($("<span>").text("User1"));
-  $("#" + val).append($("<div>").text(val));
-  $("#m").val("");
-  return false;
-}
 
 class Chat extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      message: "",
+      messages: []
+    };
+    this.handleOnChange = this.handleOnChange.bind(this);
+    this.handleOnClick = this.handleOnClick.bind(this);
+  }
+  componentDidMount() {
+    subscribeToMessages(message => {
+      this.setState({
+        messages: [...this.state.messages, message]
+      });
+    });
+  }
+
+  handleOnChange(event) {
+    this.setState({ message: event.target.value });
+  }
+
+  handleOnClick() {
+    const { message } = this.state;
+    const { user } = this.props;
+    const newMessage = { user, message };
+    this.setState(
+      {
+        message: "",
+        messages: [...this.state.messages, newMessage]
+      },
+      () => {
+        socket.emit("chat message", newMessage);
+      }
+    );
   }
 
   render() {
+    const messages = this.state.messages.map((msg, i) => (
+      <li key={i}>
+        {msg.user.toUpperCase()}: {msg.message}
+      </li>
+    ));
     return (
       <div>
-        <ul className="msg-box" id="messages" />
+        <ul className="msg-box" id="messages">
+          {messages}
+        </ul>
         <form className="msg-box-form" action="">
-          <input className="msg-inbox" id="m" autoComplete="off" />
+          <input
+            className="msg-inbox"
+            id="m"
+            autoComplete="off"
+            onChange={event => this.handleOnChange(event)}
+          />
           <button
             type="button"
             id="msg-btn-enter"
-            onClick={sendMsg}
+            onClick={() => this.handleOnClick()}
             className="button msg-btn bg-green"
           >
             Send
