@@ -17,7 +17,7 @@ const initalState = {
   ],
   pw: '',
   user: '',
-  cuisine: 'Italian',
+  cuisine: 'italian',
   isLoggedIn: true,
   redirect: false
 }

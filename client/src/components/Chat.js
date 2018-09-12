@@ -1,27 +1,30 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { subscribeToMessages, socket } from './Api';
+import openSocket from 'socket.io-client';
 
 const mapStateToProps = store => ({
-  user: store.friends.user
+  user: store.friends.user,
+  cuisine: store.friends.cuisine
 }); 
 
 class Chat extends Component {
   constructor(props){
     super(props);
     this.state = {
+      socket: openSocket(`http://localhost:3000/${this.props.cuisine}`),
       message: '',
       messages: []
-    }; 
+    };
+    this.subscribeToMessages();
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleOnClick = this.handleOnClick.bind(this);
   }
-  componentDidMount(){ 
-    subscribeToMessages(message => {
+  subscribeToMessages(){
+    this.state.socket.on('broadcast', message => {
       this.setState({
         messages: [...this.state.messages, message]
       })
-    });
+    })
   }
 
   handleOnChange(event){
@@ -36,7 +39,7 @@ class Chat extends Component {
       message: '',
       messages: [...this.state.messages, newMessage ]
     }, () => {
-      socket.emit('chat message', newMessage)
+      this.state.socket.emit('chat message', newMessage)
     })
   }
 
