@@ -51,7 +51,7 @@ class Chat extends Component {
         { messages }
         </ul>
         <form className="msg-box-form" action="">
-          <input className="msg-inbox" id="m" autoComplete="off" onChange={event => this.handleOnChange(event)} />
+          <input className="msg-inbox" id="m" autoComplete="off" value={this.state.message} onChange={event => this.handleOnChange(event)} />
             <button type="button" id="msg-btn-enter" onClick={() => this.handleOnClick()} className="button msg-btn bg-green">Send</button>
         </form>
       </div>

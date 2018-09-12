@@ -1,4 +1,11 @@
 import React, { Component } from 'react';
+import store from '../store';
+import { connect } from 'react-redux';
+import * as types from '../actions/actions';
+import { Redirect } from 'react-router-dom';
+
+const mapDispatchToProps = store => ({ friends: store.friends });
+const mapStateToProps = store => ({ CurrentUser: store.friends });
 
 class SignUp extends Component {
   constructor(props) {
@@ -22,8 +29,7 @@ class SignUp extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const {username, email, password, cuisine} = e.target 
-    console.log('IN HANDLE SUBMIT', username.value, email.value, password.value, cuisine.value);
+    // const { username, email, password, cuisine } = e.target 
     fetch('/sign-up', { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,17 +40,23 @@ class SignUp extends Component {
         cuisine: e.target.cuisine.value
       })
     }).then(res => {
-      console.log('FETCH FIRST THEN');
-      console.log(res);
-    }).then(res => {
-      console.log('FETCH SECOND THEN');
-      // if (res.status === 200) {
-      //   history.push('/download');
-      // }
+      if (res.status >= 400) {
+        throw new Error('something went wrong!')
+      }
+      return res.json()
+    })
+    .then(response => {
+      const { username, cuisine } = response;
+      store.dispatch(types.updateUsername(username));
+      store.dispatch(types.updateCuisine(cuisine));
+      store.dispatch(types.toggleLogIn());
     });
   }
 
   render() {
+    const { cuisine } = this.props.CurrentUser
+    const { redirect } = this.props.CurrentUser;
+    if (redirect) return <Redirect to={`/chat/${cuisine}`} />
     return (
       <div className="sign-up-container">
         <form className="flex-form" onSubmit={this.handleSubmit} >
@@ -77,9 +89,6 @@ class SignUp extends Component {
             <option value="italian">Italian</option>
             <option value="french">French</option>
             <option value="mexican">Mexican</option>
-            {/* <option value="english">English</option>
-            <option value="nepalese">Nepalese</option>
-            <option value="laotian">Laotian</option> */}
         </select>
         <input type="submit" value="Submit" onSubmit={this.handleSubmit} />
         </form>  
@@ -89,4 +98,4 @@ class SignUp extends Component {
 }
 
 
-export default SignUp;
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

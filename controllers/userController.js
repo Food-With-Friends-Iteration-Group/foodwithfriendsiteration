@@ -68,10 +68,6 @@ const userController = {
           if (!match) return res.status(500).send({});
           return res.status(200).send({ username, cuisine });
         })
-        // if (result.password !== password) {
-        //   return res.status(500).send({})
-        // }
-        // return res.status(200).send({ cuisine: result.cuisine })
       }
     );
   },
