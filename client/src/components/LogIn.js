@@ -10,10 +10,9 @@ const mapStateToProps = store => ({ CurrentUser: store.friends });
 
 class LogIn extends Component {
   constructor(props) {
-    super(props);    
+    super(props);
     this.state = {
-      // redirect: false,
-      food: ''
+      redirect: false
     };
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
@@ -32,7 +31,7 @@ class LogIn extends Component {
   }
 
   submitHandler(event) {
-    event.preventDefault()
+    event.preventDefault();
     if (!event.target.checkValidity()) return;
     const { user, pw, cuisine } = this.props.CurrentUser;
 
@@ -74,13 +73,14 @@ class LogIn extends Component {
               />
             </label>
             <label>
-            Password: 
-              <input 
-              name="pw" 
-              type="password"
-              value={this.props.CurrentUser.pw}
-              onChange={this.changeHandler}
-              required/>
+              Password:
+              <input
+                name="pw"
+                type="password"
+                value={this.props.CurrentUser.pw}
+                onChange={this.changeHandler}
+                required
+              />
             </label>
             <label>
               Cuisine:
@@ -109,4 +109,4 @@ class LogIn extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-  )(LogIn);
+)(LogIn);

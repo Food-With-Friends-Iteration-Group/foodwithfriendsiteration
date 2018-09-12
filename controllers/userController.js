@@ -3,13 +3,13 @@ const User = require("../models/UserSchemaModel");
 
 const userController = {
   getAll(req, res) {
-    User.find()
-      .then(data => {
-        res.json(data);
-      })
-      .catch(err => {
-        res.json(err);
-      });
+    User.find({}, (err, data) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(data);
+      }
+    });
   },
   //first chect is the user exists if they do ask them to sign in instead
   checkForUser(req, res, next) {
@@ -22,20 +22,24 @@ const userController = {
     });
   },
   addUser(req, res) {
-    console.log("hey");
-    //adding a user to the db if they dont exist
     const cuisineLover = new User({
-      loginName: "name",
-      password: "pass",
-      favoriteCuisine: "indian"
+      loginName: "name", 
+      password: "pass", 
+      favoriteCuisine: "indian" 
     });
-    cuisineLover.save((err, data) => {
+    cuisineLover.save((err, savedUser) => {
       if (err) {
         //if there is an error adding a person to the db send back this message
         res.send("problem adding user to the database");
       } else {
         //if the person was added to the database, return that user object
-        res.send(data);
+        
+        // set cookie after successfully saving user
+        let randomNum = Math.random().toString();
+        randomNum = randomNum.substring(2, randomNum.length);
+        res.cookie('FOODcookie', randomNum, { maxAge: 900000, httpOnly: true });
+        console.log('cookie created successfully');
+        res.send(savedUser);
       }
     });
   },
