@@ -39,7 +39,6 @@ mongoose.connection.once('open', () => {
 app.get("/*", express.static(__dirname));
 app.get("/login", userController.getUser);
 app.get("/dashboard", userController.getAll);
-// app.get("/admin", userController.getAllUsers);
 app.post("/sign-up", userController.addUser);
 app.post(
   "/login",
