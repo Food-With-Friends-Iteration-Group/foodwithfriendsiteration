@@ -1,41 +1,43 @@
 // Navigation
 .main-navigation {
-	width: 100%;
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	padding: 5px 0;
-	border-top: 5px solid black;
-	border-bottom: 5px solid black;
-	a {
-		color: black;
-	}
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 5px 0;
+  border-top: 5px solid black;
+  border-bottom: 5px solid black;
+  a {
+    color: black;
+  }
 }
 
 // Headers
 .main-header {
-	font-size: 4em;
+  font-size: 4em;
 }
 
 // Buttons
 .button {
-	max-width: 100px;
-	padding: 10px 50px;
-	color: black;
+  max-width: 100px;
+  padding: 10px 50px;
+  color: black;
   margin: 10px auto;
   border-radius: 5px;
-	font-size: 1em;
-	a {
-		text-decoration: none;
-		color: black;
-	}
+  font-size: 1em;
+  outline: none;
+  cursor: pointer;
+  a {
+    text-decoration: none;
+    color: black;
+  }
 }
 
 // Colors
 .bg-green {
-	background-color: $green
+  background-color: $green;
 }
 
 .bg-blue {
-	background-color: $blue;
+  background-color: $blue;
 }

@@ -116,10 +116,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./client/src/components/app.js":
-/*!**************************************!*\
-  !*** ./client/src/components/app.js ***!
-  \**************************************/
+/***/ "./client/src/App.js":
+/*!***************************!*\
+  !*** ./client/src/App.js ***!
+  \***************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -134,13 +134,9 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _nav = __webpack_require__(/*! ./nav.js */ "./client/src/components/nav.js");
+var _MainRouter = __webpack_require__(/*! ./components/MainRouter */ "./client/src/components/MainRouter.js");
 
-var _nav2 = _interopRequireDefault(_nav);
-
-var _main = __webpack_require__(/*! ./main.js */ "./client/src/components/main.js");
-
-var _main2 = _interopRequireDefault(_main);
+var _MainRouter2 = _interopRequireDefault(_MainRouter);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -148,21 +144,82 @@ function _interopRequireDefault(obj) {
 
 var App = function App() {
 
-  // fetch('/admin')
-  // .then( resp => resp.json())
-  // .then( resp => console.log(resp))
-
-  return _react2.default.createElement('div', null, _react2.default.createElement(_nav2.default, null), _react2.default.createElement(_main2.default, null));
+  return _react2.default.createElement('div', null, _react2.default.createElement(_MainRouter2.default, null));
 };
 
 exports.default = App;
 
 /***/ }),
 
-/***/ "./client/src/components/chatBox.component.js":
-/*!****************************************************!*\
-  !*** ./client/src/components/chatBox.component.js ***!
-  \****************************************************/
+/***/ "./client/src/actions/actions.js":
+/*!***************************************!*\
+  !*** ./client/src/actions/actions.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var UPDATE_EMAIL = 'UPDATE_EMAIL';
+var UPDATE_PASSWORD = 'UPDATE_PASSWORD';
+var TOGGLE_LOGIN = 'TOGGLE_LOGIN';
+var UPDATE_USERNAME = 'UPDATE_USERNAME';
+var UPDATE_CUISINE = 'UPDATE_CUISINE';
+
+var updateEmail = function updateEmail(email) {
+  return {
+    type: UPDATE_EMAIL,
+    email: email
+  };
+};
+
+var updatePassword = function updatePassword(password) {
+  return {
+    type: UPDATE_PASSWORD,
+    password: password
+  };
+};
+
+var toggleLogIn = function toggleLogIn() {
+  return {
+    type: TOGGLE_LOGIN
+  };
+};
+
+var updateUsername = function updateUsername(username) {
+  return {
+    type: UPDATE_USERNAME,
+    username: username
+  };
+};
+
+var updateCuisine = function updateCuisine(cuisine) {
+  return {
+    type: UPDATE_CUISINE,
+    cuisine: cuisine
+  };
+};
+
+module.exports = {
+  updateEmail: updateEmail,
+  UPDATE_EMAIL: UPDATE_EMAIL,
+  updatePassword: updatePassword,
+  UPDATE_PASSWORD: UPDATE_PASSWORD,
+  updateUsername: updateUsername,
+  UPDATE_USERNAME: UPDATE_USERNAME,
+  updateCuisine: updateCuisine,
+  UPDATE_CUISINE: UPDATE_CUISINE,
+  toggleLogIn: toggleLogIn,
+  TOGGLE_LOGIN: TOGGLE_LOGIN
+};
+
+/***/ }),
+
+/***/ "./client/src/components/Chat.js":
+/*!***************************************!*\
+  !*** ./client/src/components/Chat.js ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -199,6 +256,16 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
+function _toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }return arr2;
+  } else {
+    return Array.from(arr);
+  }
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -217,100 +284,112 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
-var endpoint = "http://localhost:3000";
-
 var mapStateToProps = function mapStateToProps(store) {
   return {
-    findFriends: store.friends
+    username: store.friends.username,
+    cuisine: store.friends.cuisine
   };
 };
 
-var socket = (0, _socket2.default)(endpoint);
+var Chat = function (_Component) {
+  _inherits(Chat, _Component);
 
-socket.on('broadcast', function (msg) {
-  $('#messages').append($('<li class="user2" id=' + msg + '>'));
-  $('#' + msg).append($('<div>').text(msg));
-  $('#' + msg).append($('<span>').text('User2'));
-});
-function sendMsg() {
-  socket.emit('chat message', $('#m').val());
-  var val = $('#m').val();
-  $('#messages').append($('<li class="user1" id=' + val + '>'));
-  $('#' + val).append($('<span>').text('User1'));
-  $('#' + val).append($('<div>').text(val));
-  $('#m').val('');
-  return false;
-};
+  function Chat(props) {
+    _classCallCheck(this, Chat);
 
-var ChatBox = function (_Component) {
-  _inherits(ChatBox, _Component);
+    var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this, props));
 
-  function ChatBox() {
-    _classCallCheck(this, ChatBox);
-
-    return _possibleConstructorReturn(this, (ChatBox.__proto__ || Object.getPrototypeOf(ChatBox)).apply(this, arguments));
+    _this.state = {
+      socket: (0, _socket2.default)("http://localhost:3000/" + _this.props.cuisine),
+      message: "",
+      messages: []
+    };
+    _this.subscribeToMessages();
+    _this.handleOnChange = _this.handleOnChange.bind(_this);
+    _this.handleOnClick = _this.handleOnClick.bind(_this);
+    _this.enterPressed = _this.enterPressed.bind(_this);
+    return _this;
   }
 
-  _createClass(ChatBox, [{
-    key: 'render',
+  _createClass(Chat, [{
+    key: "subscribeToMessages",
+    value: function subscribeToMessages() {
+      var _this2 = this;
+
+      this.state.socket.on("broadcast", function (message) {
+        _this2.setState({
+          messages: [].concat(_toConsumableArray(_this2.state.messages), [message])
+        });
+      });
+    }
+  }, {
+    key: "handleOnChange",
+    value: function handleOnChange(e) {
+      e.preventDefault();
+      this.setState({ message: e.target.value });
+    }
+  }, {
+    key: "handleOnClick",
+    value: function handleOnClick() {
+      var _this3 = this;
+
+      var username = this.props.username;
+      var message = this.state.message;
+
+      var newMessage = { username: username, message: message };
+      this.setState({
+        message: "",
+        messages: [].concat(_toConsumableArray(this.state.messages), [newMessage])
+      }, function () {
+        _this3.state.socket.emit("chat message", newMessage);
+      });
+    }
+  }, {
+    key: "enterPressed",
+    value: function enterPressed(e) {
+      e.preventDefault();
+      if (e.keyCode == 13) {
+        this.handleOnClick(e);
+      }
+    }
+  }, {
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('div', null, _react2.default.createElement('ul', { className: 'msg-box', id: 'messages' }), _react2.default.createElement('form', { className: 'msg-box-form', action: '' }, _react2.default.createElement('input', { className: 'msg-inbox', id: 'm', autoComplete: 'off' }), _react2.default.createElement('button', { type: 'button', id: 'msg-btn-enter', onClick: sendMsg, className: 'button msg-btn bg-green' }, 'Send')));
+      var _this4 = this;
+
+      var messages = this.state.messages.map(function (msg, i) {
+        return _react2.default.createElement("li", { key: i }, msg.username.toUpperCase(), ": ", msg.message);
+      });
+      return _react2.default.createElement("div", null, _react2.default.createElement("ul", { className: "msg-box", id: "messages" }, messages), _react2.default.createElement("form", { className: "msg-box-form", action: "" }, _react2.default.createElement("input", {
+        className: "msg-inbox",
+        id: "m",
+        autoComplete: "off",
+        value: this.state.message,
+        onChange: function onChange(event) {
+          return _this4.handleOnChange(event);
+        }
+      }), _react2.default.createElement("button", {
+        type: "button",
+        id: "msg-btn-enter",
+        onClick: function onClick() {
+          return _this4.handleOnClick();
+        },
+        className: "button msg-btn bg-green"
+      }, "Send")));
     }
   }]);
 
-  return ChatBox;
+  return Chat;
 }(_react.Component);
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(ChatBox);
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Chat);
 
 /***/ }),
 
-/***/ "./client/src/components/findFriends.component.js":
-/*!********************************************************!*\
-  !*** ./client/src/components/findFriends.component.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-var mapStateToProps = function mapStateToProps(store) {
-  return {
-    findFriends: store.friends
-  };
-};
-
-var FindFriends = function FindFriends(props) {
-  var friendsArr = [];
-  for (var i = 0; i < props.findFriends.users.length; i++) {
-    friendsArr.push(_react2.default.createElement('div', { className: 'friend-box', key: "friend" + i }, _react2.default.createElement('div', { className: 'inner-box' }, _react2.default.createElement('span', { className: 'friend-box__user' }, 'User:     '), props.findFriends.users[i].user), _react2.default.createElement('div', { className: 'inner-box' }, _react2.default.createElement('span', { className: 'friend-box__cuisine' }, ' Cuisine:     '), props.findFriends.users[i].cuisine)));
-  }
-  return _react2.default.createElement('div', { className: 'find-friends-container' }, _react2.default.createElement('div', { className: 'main-header' }, 'Find Friends'), _react2.default.createElement('div', { className: 'find-friend-box' }, friendsArr));
-};
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(FindFriends);
-
-/***/ }),
-
-/***/ "./client/src/components/login.component.js":
-/*!**************************************************!*\
-  !*** ./client/src/components/login.component.js ***!
-  \**************************************************/
+/***/ "./client/src/components/LogIn.js":
+/*!****************************************!*\
+  !*** ./client/src/components/LogIn.js ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -339,13 +418,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
-var _store = __webpack_require__(/*! ./store */ "./client/src/components/store.js");
+var _store = __webpack_require__(/*! ../store */ "./client/src/store.js");
 
 var _store2 = _interopRequireDefault(_store);
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
-var _actions = __webpack_require__(/*! ./reducers/actions */ "./client/src/components/reducers/actions.js");
+var _actions = __webpack_require__(/*! ../actions/actions */ "./client/src/actions/actions.js");
 
 var types = _interopRequireWildcard(_actions);
 
@@ -390,100 +469,101 @@ var mapStateToProps = function mapStateToProps(store) {
   return { CurrentUser: store.friends };
 };
 
-// store.dispatch(types.currentUser(username, password));
+var LogIn = function (_Component) {
+  _inherits(LogIn, _Component);
 
-var App = function (_Component) {
-  _inherits(App, _Component);
+  function LogIn(props) {
+    _classCallCheck(this, LogIn);
 
-  function App(props) {
-    _classCallCheck(this, App);
+    var _this = _possibleConstructorReturn(this, (LogIn.__proto__ || Object.getPrototypeOf(LogIn)).call(this, props));
 
-    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-
+    _this.state = {
+      redirect: false
+    };
     _this.submitHandler = _this.submitHandler.bind(_this);
     _this.changeHandler = _this.changeHandler.bind(_this);
     return _this;
   }
 
-  _createClass(App, [{
-    key: 'changeHandler',
+  _createClass(LogIn, [{
+    key: "changeHandler",
     value: function changeHandler(event) {
-      var value = event.target.value;
-      var name = event.target.name;
+      var _event$target = event.target,
+          name = _event$target.name,
+          value = _event$target.value;
 
-      // set state
-      if (name === 'user') {
-        _store2.default.dispatch(types.currentUser(value));
-      } else if (name === 'pw') {
-        _store2.default.dispatch(types.currentPW(value));
+      if (name === "email") {
+        _store2.default.dispatch(types.updateEmail(value));
+      } else if (name === "password") {
+        _store2.default.dispatch(types.updatePassword(value));
       }
-      console.log("props", this.props);
     }
   }, {
-    key: 'submitHandler',
+    key: "submitHandler",
     value: function submitHandler(event) {
       event.preventDefault();
-      console.log("submitting");
+      if (!event.target.checkValidity()) return;
+      var _props$CurrentUser = this.props.CurrentUser,
+          email = _props$CurrentUser.email,
+          password = _props$CurrentUser.password;
 
-      if (!event.target.checkValidity()) {
-        // form is invalid
-        alert("Please complete the whole form.");
-      } else {
-        var user = this.props.CurrentUser.user;
-        var pw = this.props.CurrentUser.pw;
-        var cuisine = this.props.CurrentUser.cuisine;
+      fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, password: password })
+      }).then(function (res) {
+        if (res.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        return res.json();
+      }).then(function (response) {
+        var username = response.username,
+            cuisine = response.cuisine;
 
-        fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: user, password_digest: pw, type: cuisine })
-        }).then(function (response) {
-          if (response.status >= 400) {
-            throw new Error("Bad response from server");
-          }
-          return response.json();
-        }).then(function (data) {
-          console.log("Returned data: ", data);
-          if (data) {
-            ;
-          }
-        }).catch(function (err) {
-          console.log("Returned error: ", err);
-        });
-      }
+        _store2.default.dispatch(types.updateUsername(username));
+        _store2.default.dispatch(types.updateCuisine(cuisine));
+        _store2.default.dispatch(types.toggleLogIn());
+      });
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('div', { className: 'main-login-container' }, _react2.default.createElement('div', { className: 'login-box' }, _react2.default.createElement('form', { className: 'flex-form', onSubmit: this.submitHandler, noValidate: true }, _react2.default.createElement('label', null, 'Email:', _react2.default.createElement('input', {
-        name: 'user',
-        type: 'text',
+      var cuisine = this.props.CurrentUser.cuisine;
+      var redirect = this.props.CurrentUser.redirect;
+
+      if (redirect) return _react2.default.createElement(_reactRouterDom.Redirect, { to: "/chat/" + cuisine });
+      return _react2.default.createElement("div", { className: "main-login-container" }, _react2.default.createElement("div", { className: "login-box" }, _react2.default.createElement("form", { className: "flex-form", onSubmit: this.submitHandler, noValidate: true }, _react2.default.createElement("label", null, "Email:", _react2.default.createElement("input", {
+        name: "email",
+        type: "text",
         value: this.props.CurrentUser.user,
         onChange: this.changeHandler,
-        placeholder: 'email',
-        required: true })), _react2.default.createElement('label', null, 'Password:', _react2.default.createElement('input', {
-        name: 'pw',
-        type: 'password',
+        placeholder: "email",
+        required: true
+      })), _react2.default.createElement("label", null, "Password:", _react2.default.createElement("input", {
+        name: "password",
+        type: "password",
         value: this.props.CurrentUser.pw,
         onChange: this.changeHandler,
-        required: true })), _react2.default.createElement('label', null, 'Cuisine:', _react2.default.createElement('select', null, _react2.default.createElement('option', { value: 'Italian' }, 'Italian'), _react2.default.createElement('option', { value: 'French' }, 'French'))), _react2.default.createElement('button', {
-        className: 'button form-button bg-green',
-        type: 'submit',
-        value: 'submit' }, 'Log In')), _react2.default.createElement('div', { className: 'button bg-blue' }, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up'))));
+        required: true
+      })), _react2.default.createElement("button", {
+        className: "button form-button bg-green",
+        type: "submit",
+        value: "submit"
+      }, "Log In")), _react2.default.createElement("div", { className: "button bg-blue" }, _react2.default.createElement(_reactRouterDom.Link, { to: "/sign-up" }, "Sign Up"))));
     }
   }]);
 
-  return App;
+  return LogIn;
 }(_react.Component);
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LogIn);
 
 /***/ }),
 
-/***/ "./client/src/components/main.js":
-/*!***************************************!*\
-  !*** ./client/src/components/main.js ***!
-  \***************************************/
+/***/ "./client/src/components/MainRouter.js":
+/*!*********************************************!*\
+  !*** ./client/src/components/MainRouter.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -500,218 +580,34 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
-var _login = __webpack_require__(/*! ./login.component */ "./client/src/components/login.component.js");
+var _LogIn = __webpack_require__(/*! ./LogIn */ "./client/src/components/LogIn.js");
 
-var _login2 = _interopRequireDefault(_login);
+var _LogIn2 = _interopRequireDefault(_LogIn);
 
-var _signUp = __webpack_require__(/*! ./sign-up.component */ "./client/src/components/sign-up.component.js");
+var _SignUp = __webpack_require__(/*! ./SignUp */ "./client/src/components/SignUp.js");
 
-var _signUp2 = _interopRequireDefault(_signUp);
+var _SignUp2 = _interopRequireDefault(_SignUp);
 
-var _findFriends = __webpack_require__(/*! ./findFriends.component */ "./client/src/components/findFriends.component.js");
+var _Chat = __webpack_require__(/*! ./Chat */ "./client/src/components/Chat.js");
 
-var _findFriends2 = _interopRequireDefault(_findFriends);
-
-var _chatBox = __webpack_require__(/*! ./chatBox.component */ "./client/src/components/chatBox.component.js");
-
-var _chatBox2 = _interopRequireDefault(_chatBox);
+var _Chat2 = _interopRequireDefault(_Chat);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-var Main = function Main() {
-  return _react2.default.createElement('main', null, _react2.default.createElement(_reactRouterDom.Switch, null, _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _login2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/sign-up', component: _signUp2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/find-friends', component: _findFriends2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/chat-box', component: _chatBox2.default })));
+var MainRouter = function MainRouter() {
+  return _react2.default.createElement('main', null, _react2.default.createElement(_reactRouterDom.Switch, null, _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _LogIn2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/sign-up', component: _SignUp2.default }), _react2.default.createElement(_reactRouterDom.Route, { path: '/chat', component: _Chat2.default })));
 };
 
-exports.default = Main;
+exports.default = MainRouter;
 
 /***/ }),
 
-/***/ "./client/src/components/nav.js":
-/*!**************************************!*\
-  !*** ./client/src/components/nav.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-var Header = function Header() {
-  return _react2.default.createElement('header', null, _react2.default.createElement('nav', null, _react2.default.createElement('ul', { className: 'main-navigation' }, _react2.default.createElement('li', null, _react2.default.createElement(_reactRouterDom.Link, { to: '/' }, 'Home')), _react2.default.createElement('li', null, _react2.default.createElement(_reactRouterDom.Link, { to: '/sign-up' }, 'Sign Up')), _react2.default.createElement('li', null, _react2.default.createElement(_reactRouterDom.Link, { to: '/find-friends' }, 'Find Friends')), _react2.default.createElement('li', null, _react2.default.createElement(_reactRouterDom.Link, { to: '/chat-box' }, 'Chat Box')))));
-};
-
-exports.default = Header;
-
-/***/ }),
-
-/***/ "./client/src/components/reducers/actions.js":
-/*!***************************************************!*\
-  !*** ./client/src/components/reducers/actions.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var FindFriends = 'FindFriends';
-var CurrentUser = 'CurrentUser';
-var CurrentPW = 'CurrentPW';
-
-var findFriends = function findFriends() {
-  return { types: FindFriends };
-};
-
-var currentPW = function currentPW(value) {
-  return {
-    type: CurrentPW,
-    pw: value
-  };
-};
-
-var currentUser = function currentUser(value) {
-  return {
-    type: CurrentUser,
-    user: value
-  };
-};
-
-module.exports = {
-  FindFriends: FindFriends,
-  findFriends: findFriends,
-  CurrentUser: CurrentUser,
-  currentUser: currentUser,
-  currentPW: currentPW,
-  CurrentPW: CurrentPW
-};
-
-/***/ }),
-
-/***/ "./client/src/components/reducers/foodWithFriendReducer.js":
-/*!*****************************************************************!*\
-  !*** ./client/src/components/reducers/foodWithFriendReducer.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _actions = __webpack_require__(/*! ./actions.js */ "./client/src/components/reducers/actions.js");
-
-var types = _interopRequireWildcard(_actions);
-
-function _interopRequireWildcard(obj) {
-  if (obj && obj.__esModule) {
-    return obj;
-  } else {
-    var newObj = {};if (obj != null) {
-      for (var key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-      }
-    }newObj.default = obj;return newObj;
-  }
-}
-
-var initalState = {
-  users: [{
-    user: 'James',
-    cuisine: 'Indian'
-  }, {
-    user: 'Aaron',
-    cuisine: 'French'
-  }, {
-    user: 'Mike',
-    cuisine: 'Italian'
-  }],
-  pw: '',
-  user: '',
-  cuisine: 'Italian',
-  isLoggedIn: true
-};
-
-var findFriendsReducer = function findFriendsReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initalState;
-  var action = arguments[1];
-
-  switch (action.type) {
-    case types.FindFriends:
-      var newFindFriendState = Object.assign({}, state);
-      return newFindFriendState;
-    case types.CurrentUser:
-      var newCurrentUserState = Object.assign({}, state);
-      newCurrentUserState.user = action.user;
-      return newCurrentUserState;
-    case types.CurrentPW:
-      var newCurrentPWState = Object.assign({}, state);
-      newCurrentPWState.pw = action.pw;
-      return newCurrentPWState;
-
-    default:
-      return state;
-  }
-};
-
-exports.default = findFriendsReducer;
-
-/***/ }),
-
-/***/ "./client/src/components/reducers/index.js":
-/*!*************************************************!*\
-  !*** ./client/src/components/reducers/index.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-
-var _foodWithFriendReducer = __webpack_require__(/*! ./foodWithFriendReducer */ "./client/src/components/reducers/foodWithFriendReducer.js");
-
-var _foodWithFriendReducer2 = _interopRequireDefault(_foodWithFriendReducer);
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-var reducers = (0, _redux.combineReducers)({
-  friends: _foodWithFriendReducer2.default
-});
-
-exports.default = reducers;
-
-/***/ }),
-
-/***/ "./client/src/components/sign-up.component.js":
-/*!****************************************************!*\
-  !*** ./client/src/components/sign-up.component.js ***!
-  \****************************************************/
+/***/ "./client/src/components/SignUp.js":
+/*!*****************************************!*\
+  !*** ./client/src/components/SignUp.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -734,14 +630,44 @@ var _createClass = function () {
   };
 }();
 
-var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _store = __webpack_require__(/*! ../store */ "./client/src/store.js");
+
+var _store2 = _interopRequireDefault(_store);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _actions = __webpack_require__(/*! ../actions/actions */ "./client/src/actions/actions.js");
+
+var types = _interopRequireWildcard(_actions);
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+  } else {
+    obj[key] = value;
+  }return obj;
 }
 
 function _classCallCheck(instance, Constructor) {
@@ -762,56 +688,99 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
+var mapDispatchToProps = function mapDispatchToProps(store) {
+  return { friends: store.friends };
+};
+var mapStateToProps = function mapStateToProps(store) {
+  return { CurrentUser: store.friends };
+};
+
 var SignUp = function (_Component) {
   _inherits(SignUp, _Component);
 
-  function SignUp() {
+  function SignUp(props) {
     _classCallCheck(this, SignUp);
 
-    return _possibleConstructorReturn(this, (SignUp.__proto__ || Object.getPrototypeOf(SignUp)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (SignUp.__proto__ || Object.getPrototypeOf(SignUp)).call(this, props));
+
+    _this.state = {
+      username: '',
+      email: '',
+      password: '',
+      cuisine: ''
+    };
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
+    return _this;
   }
 
   _createClass(SignUp, [{
+    key: 'handleChange',
+    value: function handleChange(e) {
+      var name = e.target.name;
+      this.setState(_defineProperty({}, name, e.target.value));
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      // const { username, email, password, cuisine } = e.target 
+      fetch('/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: e.target.username.value,
+          email: e.target.email.value,
+          password: e.target.password.value,
+          cuisine: e.target.cuisine.value
+        })
+      }).then(function (res) {
+        if (res.status >= 400) {
+          throw new Error('something went wrong!');
+        }
+        return res.json();
+      }).then(function (response) {
+        var username = response.username,
+            cuisine = response.cuisine;
+
+        _store2.default.dispatch(types.updateUsername(username));
+        _store2.default.dispatch(types.updateCuisine(cuisine));
+        _store2.default.dispatch(types.toggleLogIn());
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'sign-up-container' }, _react2.default.createElement('form', { className: 'flex-form', method: 'POST', action: '/sign-up' }, _react2.default.createElement('div', { className: 'split-form' }, 'Email:', _react2.default.createElement('input', { type: 'text' })), _react2.default.createElement('div', { className: 'split-form' }, 'Password:', _react2.default.createElement('input', { type: 'text' })), _react2.default.createElement('div', { className: 'button bg-blue' }, 'Sign Up')));
+      var cuisine = this.props.CurrentUser.cuisine;
+      var redirect = this.props.CurrentUser.redirect;
+
+      if (redirect) return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/chat/' + cuisine });
+      return _react2.default.createElement('div', { className: 'sign-up-container' }, _react2.default.createElement('form', { className: 'flex-form', onSubmit: this.handleSubmit }, _react2.default.createElement('label', null, ' Username: '), _react2.default.createElement('input', {
+        type: 'text',
+        value: this.state.value,
+        name: 'username',
+        onChange: this.handleChange
+      }), _react2.default.createElement('label', null, ' Email: '), _react2.default.createElement('input', {
+        type: 'text',
+        value: this.state.value,
+        name: 'email',
+        onChange: this.handleChange
+      }), _react2.default.createElement('label', null, ' Password: '), _react2.default.createElement('input', {
+        type: 'text',
+        value: this.state.value,
+        name: 'password',
+        onChange: this.handleChange
+      }), _react2.default.createElement('label', null, 'Pick your favorite cuisine: '), _react2.default.createElement('select', {
+        name: 'cuisine',
+        value: this.state.value,
+        onChange: this.handleChange }, _react2.default.createElement('option', { value: 'italian' }, 'Italian'), _react2.default.createElement('option', { value: 'french' }, 'French'), _react2.default.createElement('option', { value: 'mexican' }, 'Mexican')), _react2.default.createElement('input', { type: 'submit', value: 'Submit', onSubmit: this.handleSubmit })));
     }
   }]);
 
   return SignUp;
 }(_react.Component);
 
-exports.default = SignUp;
-
-/***/ }),
-
-/***/ "./client/src/components/store.js":
-/*!****************************************!*\
-  !*** ./client/src/components/store.js ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-
-var _index = __webpack_require__(/*! ./reducers/index */ "./client/src/components/reducers/index.js");
-
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-var store = (0, _redux.createStore)(_index2.default);
-
-exports.default = store;
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SignUp);
 
 /***/ }),
 
@@ -833,25 +802,162 @@ var _reactDom = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/i
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
-var _app = __webpack_require__(/*! ./components/app */ "./client/src/components/app.js");
+var _App = __webpack_require__(/*! ./App */ "./client/src/App.js");
 
-var _app2 = _interopRequireDefault(_app);
+var _App2 = _interopRequireDefault(_App);
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
-var _store = __webpack_require__(/*! ./components/store */ "./client/src/components/store.js");
+var _store = __webpack_require__(/*! ./store */ "./client/src/store.js");
 
 var _store2 = _interopRequireDefault(_store);
 
-var _app3 = __webpack_require__(/*! ../assets/styles/app.scss */ "./client/assets/styles/app.scss");
+var _app = __webpack_require__(/*! ../assets/styles/app.scss */ "./client/assets/styles/app.scss");
 
-var _app4 = _interopRequireDefault(_app3);
+var _app2 = _interopRequireDefault(_app);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-(0, _reactDom.render)(_react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement(_reactRedux.Provider, { store: _store2.default }, _react2.default.createElement(_app2.default, null))), document.getElementById('login-sign-up'));
+(0, _reactDom.render)(_react2.default.createElement(_reactRouterDom.BrowserRouter, null, _react2.default.createElement(_reactRedux.Provider, { store: _store2.default }, _react2.default.createElement(_App2.default, null))), document.getElementById("login-sign-up"));
+
+/***/ }),
+
+/***/ "./client/src/reducers/foodWithFriendReducer.js":
+/*!******************************************************!*\
+  !*** ./client/src/reducers/foodWithFriendReducer.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _actions = __webpack_require__(/*! ../actions/actions */ "./client/src/actions/actions.js");
+
+var types = _interopRequireWildcard(_actions);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
+var initalState = {
+  username: '',
+  email: '',
+  password: '',
+  cuisine: '',
+  isLoggedIn: true,
+  redirect: false
+};
+
+var findFriendsReducer = function findFriendsReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initalState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case types.UPDATE_EMAIL:
+      var newCurrentEmailState = Object.assign({}, state);
+      newCurrentEmailState.email = action.email;
+      return newCurrentEmailState;
+    case types.UPDATE_PASSWORD:
+      var newCurrentPasswordState = Object.assign({}, state);
+      newCurrentPasswordState.password = action.password;
+      return newCurrentPasswordState;
+    case types.TOGGLE_LOGIN:
+      var newCurrentRedirectState = Object.assign({}, state);
+      newCurrentRedirectState.redirect = !state.redirect;
+      return newCurrentRedirectState;
+    case types.UPDATE_USERNAME:
+      var newCurrentUsernameState = Object.assign({}, state);
+      newCurrentUsernameState.username = action.username;
+      return newCurrentUsernameState;
+    case types.UPDATE_CUISINE:
+      var newCurrentCuisineState = Object.assign({}, state);
+      newCurrentCuisineState.cuisine = action.cuisine;
+      return newCurrentCuisineState;
+    default:
+      return state;
+  }
+};
+
+exports.default = findFriendsReducer;
+
+/***/ }),
+
+/***/ "./client/src/reducers/index.js":
+/*!**************************************!*\
+  !*** ./client/src/reducers/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+
+var _foodWithFriendReducer = __webpack_require__(/*! ./foodWithFriendReducer */ "./client/src/reducers/foodWithFriendReducer.js");
+
+var _foodWithFriendReducer2 = _interopRequireDefault(_foodWithFriendReducer);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var reducers = (0, _redux.combineReducers)({
+  friends: _foodWithFriendReducer2.default
+});
+
+exports.default = reducers;
+
+/***/ }),
+
+/***/ "./client/src/store.js":
+/*!*****************************!*\
+  !*** ./client/src/store.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+
+var _index = __webpack_require__(/*! ./reducers/index */ "./client/src/reducers/index.js");
+
+var _index2 = _interopRequireDefault(_index);
+
+var _reduxDevtoolsExtension = __webpack_require__(/*! redux-devtools-extension */ "./node_modules/redux-devtools-extension/index.js");
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var store = (0, _redux.createStore)(_index2.default, (0, _reduxDevtoolsExtension.composeWithDevTools)());
+
+exports.default = store;
 
 /***/ }),
 
@@ -3352,7 +3458,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    box-shadow: 2px 2px;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-between;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n\n.msg-box {\n  height: 85%;\n  width: 50%;\n  margin: 100px auto;\n  border: 2px solid black;\n  display: flex;\n  flex-direction: column; }\n  .msg-box .user1, .msg-box .user2 {\n    font-size: 1.4em;\n    padding: 5px;\n    display: flex; }\n  .msg-box .user1 {\n    text-align: left; }\n    .msg-box .user1 span {\n      color: #dc3545;\n      padding-right: 10px; }\n  .msg-box .user2 {\n    text-align: right;\n    margin-left: auto; }\n    .msg-box .user2 span {\n      color: #007bff;\n      padding-left: 10px; }\n\n.msg-box-form {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0 10px; }\n  .msg-box-form .msg-inbox {\n    height: 40px;\n    width: 85%; }\n  .msg-box-form .msg-btn {\n    width: 15%;\n    max-width: 200px;\n    padding: 10px 20px; }\n", ""]);
+exports.push([module.i, "html, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\na {\n  text-decoration: none; }\n\n.main-navigation {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  padding: 5px 0;\n  border-top: 5px solid black;\n  border-bottom: 5px solid black; }\n  .main-navigation a {\n    color: black; }\n\n.main-header {\n  font-size: 4em; }\n\n.button {\n  max-width: 100px;\n  padding: 10px 50px;\n  color: black;\n  margin: 10px auto;\n  border-radius: 5px;\n  font-size: 1em;\n  outline: none;\n  cursor: pointer; }\n  .button a {\n    text-decoration: none;\n    color: black; }\n\n.bg-green {\n  background-color: #28a745; }\n\n.bg-blue {\n  background-color: #007bff; }\n\n.main-login-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .main-login-container .login-box {\n    max-width: 200px;\n    width: 15%;\n    height: auto;\n    text-align: center;\n    box-shadow: 2px 2px;\n    padding: 40px 80px;\n    border-radius: 5px; }\n    .main-login-container .login-box .flex-form {\n      display: flex;\n      flex-direction: column; }\n      .main-login-container .login-box .flex-form .form-button {\n        max-width: none;\n        width: 100%; }\n  .main-login-container label input {\n    margin-right: -2em;\n    padding-right: 2.2em;\n    height: 3em;\n    position: relative;\n    left: 0.5em;\n    margin-top: 1.5em;\n    margin-bottom: 1.5em;\n    outline: none; }\n  .main-login-container label select {\n    margin-left: 4em;\n    width: 9em;\n    height: 3em;\n    outline: none; }\n\n.sign-up-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100%; }\n  .sign-up-container .flex-form {\n    display: flex;\n    flex-direction: column;\n    position: relative;\n    width: 250px; }\n    .sign-up-container .flex-form .split-form {\n      display: flex;\n      justify-content: space-between; }\n  .sign-up-container button {\n    outline: none; }\n\n.find-friends-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column; }\n  .find-friends-container .find-friend-box {\n    height: 80%;\n    width: 30%;\n    border: 2px solid black; }\n    .find-friends-container .find-friend-box .friend-box {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      font-size: 1.5em;\n      padding: 10px;\n      border-bottom: 2px solid black; }\n      .find-friends-container .find-friend-box .friend-box .inner-box {\n        width: 35%;\n        display: flex;\n        justify-content: space-between;\n        align-items: center; }\n      .find-friends-container .find-friend-box .friend-box__user, .find-friends-container .find-friend-box .friend-box__cuisine {\n        color: black; }\n\n.msg-box {\n  height: 85%;\n  width: 50%;\n  margin: 100px auto;\n  border: 2px solid black;\n  display: flex;\n  flex-direction: column;\n  box-shadow: 10px 5px 5px #738c73; }\n  .msg-box .user1,\n  .msg-box .user2 {\n    font-size: 1.4em;\n    padding: 5px;\n    display: flex; }\n  .msg-box .user1 {\n    text-align: left; }\n    .msg-box .user1 span {\n      color: #dc3545;\n      padding-right: 10px; }\n  .msg-box .user2 {\n    text-align: right;\n    margin-left: auto; }\n    .msg-box .user2 span {\n      color: #007bff;\n      padding-left: 10px; }\n\n.msg-box-form {\n  width: 52%;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0 10px;\n  position: relative;\n  top: -4em;\n  left: 22em;\n  outline: none; }\n  .msg-box-form .msg-inbox {\n    height: 40px;\n    width: 85%;\n    outline: none; }\n  .msg-box-form .msg-btn {\n    width: 15%;\n    max-width: 200px;\n    padding: 10px 20px; }\n", ""]);
 
 // exports
 
@@ -19481,6 +19587,35 @@ if (true) {
 if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react.development.js */ "./node_modules/react/cjs/react.development.js");
 }
+
+/***/ }),
+
+/***/ "./node_modules/redux-devtools-extension/index.js":
+/*!********************************************************!*\
+  !*** ./node_modules/redux-devtools-extension/index.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var compose = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js").compose;
+
+exports.__esModule = true;
+exports.composeWithDevTools = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : function () {
+  if (arguments.length === 0) return undefined;
+  if (_typeof(arguments[0]) === 'object') return compose;
+  return compose.apply(null, arguments);
+};
+
+exports.devToolsEnhancer = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__ : function () {
+  return function (noop) {
+    return noop;
+  };
+};
 
 /***/ }),
 

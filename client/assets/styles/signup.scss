@@ -7,10 +7,13 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    width:250px;
+    width: 250px;
     .split-form {
       display: flex;
       justify-content: space-between;
     }
+  }
+  button {
+    outline: none;
   }
 }

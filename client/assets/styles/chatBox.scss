@@ -5,7 +5,9 @@
   border: 2px solid black;
   display: flex;
   flex-direction: column;
-  .user1, .user2 {
+  box-shadow: 10px 5px 5px #738c73;
+  .user1,
+  .user2 {
     font-size: 1.4em;
     padding: 5px;
     display: flex;
@@ -27,14 +29,20 @@
   }
 }
 .msg-box-form {
-  width: 100%;
+  width: 52%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
+  position: relative;
+  top: -4em;
+  left: 22em;
+  outline: none;
+
   .msg-inbox {
     height: 40px;
     width: 85%;
+    outline: none;
   }
   .msg-btn {
     width: 15%;

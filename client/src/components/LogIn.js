@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import store from '../store';
-import { connect } from 'react-redux';
-import * as types from '../actions/actions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import store from "../store";
+import { connect } from "react-redux";
+import * as types from "../actions/actions";
+import { Redirect } from "react-router-dom";
 
 const mapDispatchToProps = store => ({ friends: store.friends });
 const mapStateToProps = store => ({ CurrentUser: store.friends });
@@ -32,29 +32,29 @@ class LogIn extends Component {
     event.preventDefault();
     if (!event.target.checkValidity()) return;
     const { email, password } = this.props.CurrentUser;
-    fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type' : 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+    fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    })
       .then(res => {
         if (res.status >= 400) {
           throw new Error("Bad response from server");
         }
-        return res.json()
+        return res.json();
       })
       .then(response => {
         const { username, cuisine } = response;
         store.dispatch(types.updateUsername(username));
         store.dispatch(types.updateCuisine(cuisine));
         store.dispatch(types.toggleLogIn());
-    })
+      });
   }
 
   render() {
-    const { cuisine } = this.props.CurrentUser
+    const { cuisine } = this.props.CurrentUser;
     const { redirect } = this.props.CurrentUser;
-    if (redirect) return <Redirect to={`/chat/${cuisine}`} />
+    if (redirect) return <Redirect to={`/chat/${cuisine}`} />;
     return (
       <div className="main-login-container">
         <div className="login-box">

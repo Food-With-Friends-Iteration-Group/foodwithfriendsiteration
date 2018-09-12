@@ -1,12 +1,12 @@
 .main-login-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	.login-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .login-box {
     max-width: 200px;
-		width: 15%;
-		height: auto;
+    width: 15%;
+    height: auto;
     text-align: center;
     box-shadow: 2px 2px;
     padding: 40px 80px;
@@ -19,5 +19,21 @@
         width: 100%;
       }
     }
-	}
+  }
+  label input {
+    margin-right: -2em;
+    padding-right: 2.2em;
+    height: 3em;
+    position: relative;
+    left: 0.5em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    outline: none;
+  }
+  label select {
+    margin-left: 4em;
+    width: 9em;
+    height: 3em;
+    outline: none;
+  }
 }
